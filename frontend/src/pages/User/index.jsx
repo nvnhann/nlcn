@@ -1,5 +1,5 @@
 import Page from '../../Component/Page';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography, Button } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import userAPI from '../../API/userAPI';
 import { DataGrid } from '@mui/x-data-grid';
@@ -103,10 +103,9 @@ export default function User() {
       <Typography color="primary" variant="h4" gutterBottom>
         User
       </Typography>
-
       <Box>
         <div style={{ height: 400, width: '100%' }}>
-          <div style={{ height: 350, width: '100%' }}>
+          <div style={{ height: 400, width: '100%' }}>
             <DataGrid
               rows={rows}
               columns={columns}

@@ -1,56 +1,56 @@
 import PropTypes from 'prop-types';
 import SimpleBarReact from 'simplebar-react';
-import {alpha, Box} from "@mui/material";
-import {styled} from "@mui/styles";
+
 import React from 'react';
+import { alpha, Box, styled } from '@material-ui/core';
 const RootStyle = styled('div')({
-    flexGrow: 1,
-    height: '100%',
-    overflow: 'hidden'
+  flexGrow: 1,
+  height: '100%',
+  overflow: 'hidden',
 });
 
 const SimpleBarStyle = styled(SimpleBarReact)(({ theme }) => ({
-    maxHeight: '100%',
-    '& .simplebar-scrollbar': {
-        '&:before': {
-            backgroundColor: alpha(theme.palette.grey[600], 0.48)
-        },
-        '&.simplebar-visible:before': {
-            opacity: 1
-        }
+  maxHeight: '50%',
+  '& .simplebar-scrollbar': {
+    '&:before': {
+      backgroundColor: alpha(theme.palette.grey[600], 0.48),
     },
-    '& .simplebar-track.simplebar-vertical': {
-        width: 10
+    '&.simplebar-visible:before': {
+      opacity: 1,
     },
-    '& .simplebar-track.simplebar-horizontal .simplebar-scrollbar': {
-        height: 6
-    },
-    '& .simplebar-mask': {
-        zIndex: 'inherit'
-    }
+  },
+  '& .simplebar-track.simplebar-vertical': {
+    width: 10,
+  },
+  '& .simplebar-track.simplebar-horizontal .simplebar-scrollbar': {
+    height: 6,
+  },
+  '& .simplebar-mask': {
+    zIndex: 'inherit',
+  },
 }));
 
 ScrollBar.propTypes = {
-    children: PropTypes.node.isRequired,
-    sx: PropTypes.object
-}
+  children: PropTypes.node.isRequired,
+  style: PropTypes.object,
+};
 
-export default function ScrollBar({ children, sx, ...other }){
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
+export default function ScrollBar({ children, style, ...other }) {
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
+  if (isMobile) {
+    return (
+      <Box style={{ overflowX: 'auto', ...style }} {...other}>
+        {children}
+      </Box>
     );
-    if (isMobile) {
-        return (
-            <Box sx={{ overflowX: 'auto', ...sx }} {...other}>
-                {children}
-            </Box>
-        );
-    }
-    return(
-        <RootStyle>
-            <SimpleBarStyle timeout={500} clickOnTrack={false} sx={sx} {...other}>
-                {children}
-            </SimpleBarStyle>
-        </RootStyle>
-    )
+  }
+  return (
+    <RootStyle>
+      <SimpleBarStyle timeout={500} clickOnTrack={false} style={style} {...other}>
+        {children}
+      </SimpleBarStyle>
+    </RootStyle>
+  );
 }
