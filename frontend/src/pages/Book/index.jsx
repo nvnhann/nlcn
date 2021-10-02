@@ -71,7 +71,7 @@ function Book() {
 
   useEffect(() => {
     (async () => {
-      const res = await SachAPI.get();
+      const res = await SachAPI.getAll();
       setData(res);
       setFilterData(res);
     })();
@@ -169,6 +169,57 @@ function Book() {
 
   const columns = [
     {
+      field: 'action',
+      headerName: 'Hành động',
+      width: 200,
+      renderCell: (params) => (
+        <>
+          <strong>
+            <Button
+              onClick={() => {
+                handleClickOpenDelete();
+                setIdsach(params.row.id);
+                setTenSach(params.row.tensach);
+              }}
+              startIcon={<Icon icon="fluent:delete-24-filled" color="#ff4444" />}
+              size="small"
+            >
+              Xóa
+            </Button>
+          </strong>
+
+          <strong>
+            <Button
+              onClick={() => {
+                handleClickOpenEdit();
+                setTimeout(() => {
+                  formEdit.setValue('tensach', params.row.tensach);
+                  formEdit.setValue('mo_ta', params.row.mota);
+                  formEdit.setValue('so_trang', params.row.sotrang);
+                  formEdit.setValue('trong_luong', params.row.trongluong);
+                  formEdit.setValue('so_luong', params.row.soluong);
+                  formEdit.setValue('hinh_thuc_bia', params.row.htb);
+                  formEdit.setValue('idnxb', params.row.idnxb);
+                  formEdit.setValue('idtg', params.row.idtg);
+                  formEdit.setValue('gia_sach', params.row.giasach);
+                  formEdit.setValue('idnn', params.row.idnn);
+                  formEdit.setValue('idncc', params.row.idncc);
+                  formEdit.setValue('idtl', params.row.idtl);
+                  formEdit.setValue('idkt', params.row.idkt);
+                }, 10);
+                SetfilenameE(params.row.hinhanh);
+                setIdsach(params.row.id);
+              }}
+              startIcon={<Icon icon="eva:edit-2-fill" color="#33b5e5" />}
+              size="small"
+            >
+              Sửa
+            </Button>
+          </strong>
+        </>
+      ),
+    },
+    {
       field: 'id',
       headerName: 'ID',
       width: 200,
@@ -176,7 +227,7 @@ function Book() {
     {
       field: 'tensach',
       headerName: 'Tên sách',
-      width: 200,
+      width: 500,
     },
     {
       field: 'giasach',
@@ -249,58 +300,6 @@ function Book() {
     { field: 'idtl', hide: true },
     { field: 'idkt', hide: true },
     { field: 'idnn', hide: true },
-
-    {
-      field: 'action',
-      headerName: 'Hành động',
-      width: 200,
-      renderCell: (params) => (
-        <>
-          <strong>
-            <Button
-              onClick={() => {
-                handleClickOpenDelete();
-                setIdsach(params.row.id);
-                setTenSach(params.row.tensach);
-              }}
-              startIcon={<Icon icon="fluent:delete-24-filled" color="#ff4444" />}
-              size="small"
-            >
-              Xóa
-            </Button>
-          </strong>
-
-          <strong>
-            <Button
-              onClick={() => {
-                handleClickOpenEdit();
-                setTimeout(() => {
-                  formEdit.setValue('tensach', params.row.tensach);
-                  formEdit.setValue('mo_ta', params.row.mota);
-                  formEdit.setValue('so_trang', params.row.sotrang);
-                  formEdit.setValue('trong_luong', params.row.trongluong);
-                  formEdit.setValue('so_luong', params.row.soluong);
-                  formEdit.setValue('hinh_thuc_bia', params.row.htb);
-                  formEdit.setValue('idnxb', params.row.idnxb);
-                  formEdit.setValue('idtg', params.row.idtg);
-                  formEdit.setValue('gia_sach', params.row.giasach);
-                  formEdit.setValue('idnn', params.row.idnn);
-                  formEdit.setValue('idncc', params.row.idncc);
-                  formEdit.setValue('idtl', params.row.idtl);
-                  formEdit.setValue('idkt', params.row.idkt);
-                }, 10);
-                SetfilenameE(params.row.hinhanh);
-                setIdsach(params.row.id);
-              }}
-              startIcon={<Icon icon="eva:edit-2-fill" color="#33b5e5" />}
-              size="small"
-            >
-              Sửa
-            </Button>
-          </strong>
-        </>
-      ),
-    },
   ];
 
   const rows = [];

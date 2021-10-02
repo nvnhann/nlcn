@@ -22,6 +22,7 @@ import AccountPopover from './AccountPopover';
 import { useSelector } from 'react-redux';
 import Login from '../../Component/Authentication/Login';
 import Register from '../../Component/Authentication/Register';
+import Searchbar from '../../Component/Searchbar';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -91,11 +92,12 @@ export default function NavbarHome({ onOpenSidebar }) {
             noWrap
             component="a"
             style={{ color: '#fff', textDecoration: 'none' }}
-            href="/"
+            href="/app"
           >
             RIKUO
           </Typography>
           <Box style={{ flexGrow: 1 }} />
+          <Searchbar />
           {isLogin ? (
             <AccountPopover />
           ) : (

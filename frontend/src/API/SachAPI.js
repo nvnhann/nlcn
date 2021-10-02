@@ -5,6 +5,10 @@ const SachApi = {
     const url = '/api/sach';
     return axiosClient.get(url);
   },
+  getAll() {
+    const url = '/api/sach/chitietsach';
+    return axiosClient.get(url);
+  },
   create(data) {
     const url = '/api/sach';
     return axiosClient.post(url, data);

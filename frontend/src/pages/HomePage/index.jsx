@@ -3,6 +3,8 @@ import React from 'react';
 import NavbarHome from './NavbarHome';
 import { Outlet } from 'react-router-dom';
 import { styled } from '@material-ui/core';
+import 'simplebar/dist/simplebar.min.css';
+import SimpleBar from 'simplebar-react';
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
@@ -26,14 +28,17 @@ const MainStyle = styled('div')(({ theme }) => ({
 }));
 export default function HomePage() {
   return (
-    <RootStyle>
-      <Helmet>
-        <title>RIKUO</title>
-      </Helmet>
-      <NavbarHome />
-      <MainStyle>
-        <Outlet />
-      </MainStyle>
-    </RootStyle>
+    <SimpleBar style={{ maxHeight: 700 }}>
+      <RootStyle>
+        <Helmet>
+          <title>RIKUO</title>
+        </Helmet>
+        <NavbarHome />
+
+        <MainStyle>
+          <Outlet />
+        </MainStyle>
+      </RootStyle>
+    </SimpleBar>
   );
 }

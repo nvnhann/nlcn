@@ -3,7 +3,6 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import HomePage from '../pages/HomePage';
 import DashBoard from '../pages/DashBoard';
-import LoginForm from '../Component/Authentication/Login/LoginForm';
 import User from '../pages/User';
 import TacGia from '../pages/TacGia';
 import NhaCungCap from '../pages/NhaCungCap';
@@ -13,13 +12,20 @@ import NhomTheLoai from '../pages/NhomTheLoai';
 import KichThuot from '../pages/KichThuot';
 import TheLoai from '../pages/TheLoai';
 import Book from '../pages/Book';
+import Product from '../pages/Product';
 
 export default function Router() {
   const isAdmin = useSelector((state) => state.user.current.role) === 'ADMIN';
   return useRoutes([
     {
       path: '/',
-      element: <Navigate to="app" />,
+      element: isAdmin ? <Navigate to="/dashboard" /> : <HomePage />,
+      children: [
+        {
+          path: '/app',
+          element: <Product />,
+        },
+      ],
     },
     {
       path: '/dashboard',
@@ -60,16 +66,6 @@ export default function Router() {
         {
           path: 'theloai',
           element: <TheLoai />,
-        },
-      ],
-    },
-    {
-      path: '/app',
-      element: isAdmin ? <Navigate to="/dashboard" /> : <HomePage />,
-      children: [
-        {
-          path: 'login',
-          element: <LoginForm />,
         },
       ],
     },
