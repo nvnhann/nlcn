@@ -37,6 +37,26 @@ exports.getAll = (req, res) => {
   Sach.getAll((err, data) => {
     if (err) {
       console.log(err);
+      return res.status(500).send({ message: err });
+    }
+    res.send(data);
+  });
+};
+
+exports.getById = (req, res) => {
+  Sach.getById(req.params.idsach, (err, data) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).send({ message: err });
+    }
+    res.send(data);
+  });
+};
+
+exports.get = (req, res) => {
+  Sach.get((err, data) => {
+    if (err) {
+      console.log(err);
       return res.status(500).send({ message: error });
     }
     res.send(data);

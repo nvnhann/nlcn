@@ -36,7 +36,7 @@ function Product() {
 
   useEffect(() => {
     requestSearch(text);
-  }, [text]);
+  }, [text]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Page title="Sách">

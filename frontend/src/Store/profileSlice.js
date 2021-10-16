@@ -8,7 +8,17 @@ export const getProfile = createAsyncThunk(
         localStorage.setItem('profile', JSON.stringify(data));
         return data;
     }
-)
+);
+
+export const updateProfile = createAsyncThunk(
+    'user/profile',
+    async (payload)=>{
+        await profileAPI.update(payload);
+        const data = await profileAPI.get();
+        localStorage.setItem('profile', JSON.stringify(data));
+        return data;
+    }
+);
 
 const profileSlice = createSlice({
     name:'profile',
@@ -17,6 +27,9 @@ const profileSlice = createSlice({
     },
     extraReducers:{
         [getProfile.fulfilled]:(state,action)=>{
+            state.account = action.payload;
+        },
+        [updateProfile.fulfilled]:(state,action)=>{
             state.account = action.payload;
         }
     }

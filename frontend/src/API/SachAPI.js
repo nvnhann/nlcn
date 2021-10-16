@@ -5,8 +5,12 @@ const SachApi = {
     const url = '/api/sach';
     return axiosClient.get(url);
   },
+  getById(idsach) {
+    const url = `/api/sach/${idsach}`;
+    return axiosClient.get(url);
+  },
   getAll() {
-    const url = '/api/sach/chitietsach';
+    const url = '/api/chitietsach';
     return axiosClient.get(url);
   },
   create(data) {

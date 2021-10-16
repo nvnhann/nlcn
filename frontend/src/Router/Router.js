@@ -13,9 +13,12 @@ import KichThuot from '../pages/KichThuot';
 import TheLoai from '../pages/TheLoai';
 import Book from '../pages/Book';
 import Product from '../pages/Product';
-
+import ProductDetail from '../pages/ProductDetail';
+import Profile from '../pages/Profile';
+import ShopCart from '../pages/ShopCart';
 export default function Router() {
   const isAdmin = useSelector((state) => state.user.current.role) === 'ADMIN';
+  const isLogin = !!useSelector((state) => state.user.current.id);
   return useRoutes([
     {
       path: '/',
@@ -24,6 +27,22 @@ export default function Router() {
         {
           path: '/app',
           element: <Product />,
+        },
+        {
+          path: '/profile',
+          element: isLogin ? <Profile /> : <Navigate to="/" />,
+        },
+        {
+          path: '/',
+          element: <Navigate to="/app" />,
+        },
+        {
+          path: '/app/:idsach',
+          element: <ProductDetail />,
+        },
+        {
+          path: '/shopcart',
+          element: <ShopCart />,
         },
       ],
     },

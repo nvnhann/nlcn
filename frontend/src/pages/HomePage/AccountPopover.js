@@ -92,7 +92,7 @@ export default function AccountPopover() {
         ))}
         <Box sx={{ p: 2, pt: 1.5 }}>
           <Button
-            sx={{ textTransform: 'none' }}
+            style={{ textTransform: 'none' }}
             fullWidth
             color="inherit"
             variant="outlined"

@@ -45,3 +45,24 @@ exports.updateEmail = (req, res)=>{
         res.send({rs})
     })
 }
+
+exports.update= (req, res)=>{
+    const profile = new Profile({
+        lastname: req.body.lastname,
+        firstname: req.body.firstname,
+        phone: req.body.phone,
+    });
+    Profile.update(req.idtk, profile, (err, _)=>{
+        if (err) {
+            if (err.kind === "not_found")
+                return res
+                    .status(404)
+                    .send({ message: "Not found profile with id" + req.params.idtg });
+            else
+                return res.status(500).send({
+                    message: "Could not update profile with id " + req.params.idtg,
+                });
+        }
+        res.send({ message: "profile was updated successfully!" });
+    })
+}

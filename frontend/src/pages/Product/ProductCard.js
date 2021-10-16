@@ -12,7 +12,7 @@ const ProductImgStyle = styled('img')({
 });
 
 function ProductCard({ product }) {
-  const { tensach, hinhanh, gia_sach, status } = product;
+  const { tensach, hinhanh, gia_sach, status, idsach } = product;
 
   return (
     <Card
@@ -39,7 +39,7 @@ function ProductCard({ product }) {
         <ProductImgStyle alt={tensach} src={hinhanh} />
       </Box>
       <Box p={3}>
-        <Link to="#" color="inherit" underline="hover" component={RouterLink}>
+        <Link to={'/app/' + idsach} color="inherit" underline="hover" component={RouterLink}>
           <Typography variant="subtitle2">{tensach}</Typography>
         </Link>
 

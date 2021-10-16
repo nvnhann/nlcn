@@ -34,7 +34,6 @@ export default function HomePage() {
           <title>RIKUO</title>
         </Helmet>
         <NavbarHome />
-
         <MainStyle>
           <Outlet />
         </MainStyle>

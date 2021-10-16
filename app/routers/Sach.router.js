@@ -28,7 +28,9 @@ module.exports = function (app) {
     upload.single("hinh_anh"),
     Sach.create
   );
-  app.get("/api/sach", Sach.getAll);
+  app.get("/api/sach", Sach.get);
+  app.get("/api/sach/:idsach", Sach.getById);
+  app.get("/api/chitietsach", Sach.getAll);
   app.put(
     "/api/sach/:idsach",
     [authjwt.verifyToken, authjwt.isAdmin],

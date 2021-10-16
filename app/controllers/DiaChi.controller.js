@@ -4,9 +4,12 @@ exports.create = (req, res) => {
   const diachi = new DiaChi({
     diachi: req.body.diachi,
     macdinh: req.body.macdinh,
-    idtk: req.body.idtk,
+    ho: req.body.ho,
+    sdt: req.body.sdt,
+    ten: req.body.ten,
+    idtk: req.idtk,
   });
-
+console.log(diachi);
   DiaChi.create(diachi, (err, _) => {
     if (err) {
       console.log(err);
@@ -17,7 +20,7 @@ exports.create = (req, res) => {
 };
 
 exports.getAll = (req, res) => {
-  DiaChi.getAll((err, data) => {
+  DiaChi.getAll(req.idtk,(err, data) => {
     if (err) {
       console.log(err);
       return res.status(500).send({ message: err });
@@ -43,6 +46,8 @@ exports.update = (req, res) => {
   const iddc = req.params.iddc;
   const diachi = new DiaChi({
     diachi: req.body.diachi,
+    ho: req.body.ho,
+    ten: req.body.ten,
     macdinh: req.body.macdinh,
     idtk: req.body.idtk,
   });

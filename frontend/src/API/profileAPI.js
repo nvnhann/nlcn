@@ -8,6 +8,10 @@ const profileAPI = {
     get(){
         const url = '/api/profile';
         return axiosClient.get(url);
+    },
+    update(data){
+        const url = '/api/profile';
+        return axiosClient.put(url,data);
     }
 }
 

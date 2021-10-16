@@ -12,5 +12,5 @@ module.exports = function (app) {
 
     app.post('/api/profile', [authJwt.verifyToken], profile.create);
     app.get('/api/profile', [authJwt.verifyToken], profile.get);
-    app.put('/api/profile/:idtk', [authJwt.verifyToken], authJwt.verifyPwd)
+    app.put('/api/profile', [authJwt.verifyToken], profile.update);
 }
