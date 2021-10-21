@@ -22,7 +22,7 @@ function Product() {
     const searchRegex = new RegExp(escapeRegExp(text), 'i');
     const filteredRows = book.filter((row) => {
       return Object.keys(row).some((field) => {
-        return searchRegex.test(row[field].toString());
+        return searchRegex.test(row[field]?.toString());
       });
     });
     return setFillterBook(filteredRows);

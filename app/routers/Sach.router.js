@@ -1,5 +1,6 @@
 const multer = require("multer");
 const Sach = require("../controllers/Sach.controller");
+const authjwt = require("../middleware/authJWT");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./frontend/public/img/product");
@@ -31,6 +32,7 @@ module.exports = function (app) {
   app.get("/api/sach", Sach.get);
   app.get("/api/sach/:idsach", Sach.getById);
   app.get("/api/chitietsach", Sach.getAll);
+  app.get("/api/sachkm", [authjwt.verifyToken, authjwt.isAdmin], Sach.getSachkm);
   app.put(
     "/api/sach/:idsach",
     [authjwt.verifyToken, authjwt.isAdmin],

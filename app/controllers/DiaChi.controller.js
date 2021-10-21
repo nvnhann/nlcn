@@ -31,9 +31,7 @@ exports.getAll = (req, res) => {
 
 exports.delete = (req, res) => {
   const iddc = req.params.iddc;
-  const idtk = req.body.idtk;
-
-  DiaChi.delete(iddc, idtk, (err, _) => {
+  DiaChi.delete(iddc, (err, _) => {
     if (err) {
       if (err.kind === 'not_found') return res.status(404).send({ message: 'Not found dia chi with id ' + iddc });
       else return res.status(500).send({ message: 'Could not delete dia chi with id ' } + iddc);
@@ -49,7 +47,7 @@ exports.update = (req, res) => {
     ho: req.body.ho,
     ten: req.body.ten,
     macdinh: req.body.macdinh,
-    idtk: req.body.idtk,
+    sdt: req.body.sdt
   });
   DiaChi.update(iddc, diachi, (err, _) => {
     if (err) {

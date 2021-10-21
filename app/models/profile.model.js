@@ -32,7 +32,7 @@ Profile.create = (newProfile, rs) => {
 
 Profile.get = (idtk, rs) => {
     sql.query(
-        `SELECT ho, ten, sdt, dc.diachi from thong_tin_tk tt LEFT JOIN dia_chi dc ON tt.idtk=dc.idtk WHERE dc.mac_dinh=1 AND tt.idtk= '${idtk}'`,
+        `SELECT tt.ho, tt.ten, tt.sdt, dc.diachi from thong_tin_tk tt LEFT JOIN dia_chi dc ON tt.idtk=dc.idtk WHERE dc.mac_dinh=1 AND tt.idtk= '${idtk}'`,
         (err, res) => {
             if (err) {
                 console.log(err);

@@ -5,6 +5,7 @@ const axiosClient = axios.create({
     'Content-type': 'application/json',
     'x-access-token': localStorage.getItem('x-access-token'),
   },
+  withCredentials: true
 });
 
 // Add a request interceptor

@@ -16,6 +16,7 @@ import Product from '../pages/Product';
 import ProductDetail from '../pages/ProductDetail';
 import Profile from '../pages/Profile';
 import ShopCart from '../pages/ShopCart';
+import Sale from "../pages/Sale";
 export default function Router() {
   const isAdmin = useSelector((state) => state.user.current.role) === 'ADMIN';
   const isLogin = !!useSelector((state) => state.user.current.id);
@@ -85,6 +86,10 @@ export default function Router() {
         {
           path: 'theloai',
           element: <TheLoai />,
+        },
+        {
+          path: 'sale',
+          element: <Sale />,
         },
       ],
     },

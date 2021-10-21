@@ -44,8 +44,8 @@ DiaChi.getAll = (idtk,rs) => {
   });
 };
 
-DiaChi.delete = (iddc, idtk, rs) => {
-  sql.query('DELETE FROM `dia_chi` WHERE iddc = ? AND idtk = ? ', [iddc, idtk], (err, data) => {
+DiaChi.delete = (iddc, rs) => {
+  sql.query('DELETE FROM `dia_chi` WHERE iddc = ?  ', [iddc], (err, data) => {
     if (err) return rs(err, null);
     if (data.affectedRows === 0) return rs({ kind: 'not_found' }, null);
     rs(null, data);
@@ -54,8 +54,8 @@ DiaChi.delete = (iddc, idtk, rs) => {
 DiaChi.update = (iddc, newDiachi, rs) => {
   if (newDiachi.macdinh === 1) {
     sql.query(
-      'UPDATE `dia_chi` SET `diachi` = ?, ho=?, ten=?,`mac_dinh` = ? WHERE `dia_chi`.`iddc` = ? AND `dia_chi`.`idtk` = ? ',
-      [newDiachi.diachi, newDiachi.ho, newDiachi.ten, newDiachi.macdinh, iddc, newDiachi.idtk],
+      'UPDATE `dia_chi` SET `diachi` = ?, ho=?, ten=?, sdt=?,`mac_dinh` = ? WHERE `dia_chi`.`iddc` = ?',
+      [newDiachi.diachi, newDiachi.ho, newDiachi.ten,newDiachi.sdt, newDiachi.macdinh, iddc],
       (err, data) => {
         if (err) return rs(err, null);
         else if (data.affectedRows === 0) return rs({ kind: 'not_found' }, null);
@@ -69,8 +69,8 @@ DiaChi.update = (iddc, newDiachi, rs) => {
     );
   } else {
     sql.query(
-      'UPDATE `dia_chi` SET `diachi` = ?,ho=?,ten=?, `mac_dinh` = ? WHERE `dia_chi`.`iddc` = ? AND `dia_chi`.`idtk` = ? ',
-      [newDiachi.diachi, newDiachi.ho, newDiachi.ten, newDiachi.macdinh, iddc, newDiachi.idtk],
+      'UPDATE `dia_chi` SET `diachi` = ?,ho=?,ten=?, sdt=?, `mac_dinh` = ? WHERE `dia_chi`.`iddc` = ? ',
+      [newDiachi.diachi, newDiachi.ho, newDiachi.ten,newDiachi.sdt, newDiachi.macdinh, iddc],
       (err, data) => {
         if (err) return rs(err, null);
         return rs(null, data);

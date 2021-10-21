@@ -5,6 +5,10 @@ const SachApi = {
     const url = '/api/sach';
     return axiosClient.get(url);
   },
+  getSachKm(){
+    const url = '/api/sachkm';
+    return axiosClient.get(url);
+  },
   getById(idsach) {
     const url = `/api/sach/${idsach}`;
     return axiosClient.get(url);

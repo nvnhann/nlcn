@@ -34,7 +34,7 @@ export default function ProductList({ products, ...other }) {
               480: 1,
             }}
             className="my-masonry-grid flex w-full"
-            columnClassName="my-masonry-grid_column w-full flex flex-col p-8"
+            columnClassName="my-masonry-grid_column w-full flex flex-col"
           >
             {products.map((product) => (
               <ShopProductCard key={product.idsach} product={product} />

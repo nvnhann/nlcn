@@ -1,12 +1,15 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const CookieParser = require('cookie-parser');
 
 const app = express();
 app.use(morgan("dev"));
+app.use(CookieParser());
 
 const corsOptions = {
   origin: "http://localhost:3000",
+  credentials: true
 };
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -28,6 +31,8 @@ require("./app/routers/NhomTheLoai.router")(app);
 require("./app/routers/TheLoai.router")(app);
 require("./app/routers/DiaChi.router")(app);
 require("./app/routers/Sach.router")(app);
+require("./app/routers/KhuyenMai.router")(app);
+
 const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {

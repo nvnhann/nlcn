@@ -63,6 +63,16 @@ exports.get = (req, res) => {
   });
 };
 
+exports.getSachkm = (req, res) => {
+  Sach.getSachkm((err, data) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).send({ message: error });
+    }
+    res.send(data);
+  });
+};
+
 exports.update = (req, res) => {
   const data = JSON.parse(req.body.data);
   const file = req.file;

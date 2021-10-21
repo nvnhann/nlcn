@@ -21,6 +21,11 @@ const SideBarConfig = [
     icon: getIcon('dashicons:book-alt', color),
   },
   {
+    title: 'Khuyến mãi',
+    path: '/dashboard/sale',
+    icon: getIcon('whh:sale', color),
+  },
+  {
     title: 'Nhà cung cấp',
     path: '/dashboard/nhacungcap',
     icon: getIcon('fa-solid:house-user', color),

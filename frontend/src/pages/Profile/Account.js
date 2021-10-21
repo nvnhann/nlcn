@@ -1,15 +1,17 @@
 import {
     Button,
-    Dialog, DialogActions,
+    Dialog,
+    DialogActions,
     DialogContent,
     DialogTitle,
-    Divider, Grid,
+    Divider,
+    Grid,
     IconButton,
     Paper,
     Slide,
     Typography
 } from '@material-ui/core';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Icon} from "@iconify/react";
 import {useForm} from "react-hook-form";
@@ -29,8 +31,8 @@ function Account() {
     const profile = useSelector((state) => state.profile.account);
     const email = useSelector((state) => state.user.current.email);
     const [open, setOpen] = useState(false);
-    const { enqueueSnackbar } = useSnackbar();
-    const dispatch =useDispatch();
+    const {enqueueSnackbar} = useSnackbar();
+    const dispatch = useDispatch();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -51,11 +53,11 @@ function Account() {
     const handleSubmit = async (value) => {
         try {
             unwrapResult(dispatch(await updateProfile(value)));
-            enqueueSnackbar('Cập nhật thành công', { variant: 'success', autoHideDuration: 2000 });
+            enqueueSnackbar('Cập nhật thành công', {variant: 'success', autoHideDuration: 2000});
             handleClose();
             form.reset({firstname: value.firstname, lastname: value.lastname, phone: value.phone});
-        }catch (error){
-            enqueueSnackbar(error.message, { variant: 'error', autoHideDuration: 2000 });
+        } catch (error) {
+            enqueueSnackbar(error.message, {variant: 'error', autoHideDuration: 2000});
         }
     }
     return (
@@ -87,7 +89,7 @@ function Account() {
                 </Typography>
             </div>
             <Button variant="contained" color="primary" style={{textTransform: 'none'}}
-                    onClick={()=>{
+                    onClick={() => {
                         handleClickOpen();
                     }}>Cập nhật thông tin</Button>
             <Divider style={{margin: '1rem 0'}}/>
@@ -117,46 +119,46 @@ function Account() {
                 </Typography>
             </div>
             <Dialog
-                    open={open}
-                    onClose={handleClose}
-                    TransitionComponent={Transition}
+                open={open}
+                onClose={handleClose}
+                TransitionComponent={Transition}
             >
                 <form onSubmit={form.handleSubmit(handleSubmit)}>
-                <DialogTitle>
-                    <Typography  color="primary" align="center">Cập nhật thông tin tài khoản</Typography>
-                    <IconButton
-                        aria-label="close"
-                        onClick={handleClose}
-                        style={{
-                            position: 'absolute',
-                            right: 8,
-                            top: 8,
-                            color: (theme) => theme.palette.grey[500],
-                        }}
-                    >
-                        <Icon icon="majesticons:close" color="#6b7280" />
-                    </IconButton>
-                </DialogTitle>
-                <DialogContent>
+                    <DialogTitle>
+                        <Typography color="primary" align="center">Cập nhật thông tin tài khoản</Typography>
+                        <IconButton
+                            aria-label="close"
+                            onClick={handleClose}
+                            style={{
+                                position: 'absolute',
+                                right: 8,
+                                top: 8,
+                                color: (theme) => theme.palette.grey[500],
+                            }}
+                        >
+                            <Icon icon="majesticons:close" color="#6b7280"/>
+                        </IconButton>
+                    </DialogTitle>
+                    <DialogContent>
                         <Grid container spacing={2}>
-                            <Grid item xs={6}><InputText form={form} name="lastname"  label="Họ"/></Grid>
-                            <Grid item xs={6}><InputText form={form} name="firstname" label="Tên" /></Grid>
+                            <Grid item xs={6}><InputText form={form} name="lastname" label="Họ"/></Grid>
+                            <Grid item xs={6}><InputText form={form} name="firstname" label="Tên"/></Grid>
                         </Grid>
-                    <InputText form={form} name="phone" label="Số điện thoại" />
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        type="submit"
-                        color="primary"
-                        variant="contained"
-                        style={{ textTransform: 'none' }}
-                    >
-                        Cập nhật
-                    </Button>
-                    <Button onClick={handleClose} style={{ textTransform: 'none' }}>
-                        Đóng
-                    </Button>
-                </DialogActions>
+                        <InputText form={form} name="phone" label="Số điện thoại"/>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            type="submit"
+                            color="primary"
+                            variant="contained"
+                            style={{textTransform: 'none'}}
+                        >
+                            Cập nhật
+                        </Button>
+                        <Button onClick={handleClose} style={{textTransform: 'none'}}>
+                            Đóng
+                        </Button>
+                    </DialogActions>
                 </form>
             </Dialog>
         </Paper>

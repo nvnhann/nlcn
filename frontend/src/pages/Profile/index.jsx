@@ -35,7 +35,8 @@ export default function Profile() {
     (async ()=>{
       dispatch(await getProfile())
     })()
-  },[])
+  },[]) // eslint-disable-line react-hooks/exhaustive-deps
+
   const list = [
     {
       index: 0,

@@ -22,6 +22,7 @@ const userSlice = createSlice({
             state.current = {};
             localStorage.removeItem('user');
             localStorage.removeItem('profile');
+            localStorage.removeItem('x-access-token');
         }
     },
     extraReducers:{

@@ -8,6 +8,7 @@ import { Box, Button, Typography, useTheme } from '@material-ui/core';
 import InputText from '../../Form-control/InputText';
 import PasswordField from '../../Form-control/PasswordField';
 import OtpAPI from '../../../API/OtpAPI';
+import Cookies from 'js-cookie';
 
 RegisterForm.propTypes = {
   onSubmit: PropTypes.func,
@@ -35,18 +36,16 @@ export default function RegisterForm(props) {
     }
   };
 
-  const otpSubmit = async (value) => {
+  const otpSubmit = (value) => {
     if (value.otp === '') return;
-    try {
-      await OtpAPI.post({ otp: value.otp, email: value.email });
+    if(value.otp === Cookies.get('otp')) {
       enqueueSnackbar('Xác nhận thành công!', { variant: 'success', autoHideDuration: 2000 });
       setTimeout(() => {
         form.setValue('email', value.email);
       }, 100);
-      console.log(form.getValues('email'));
       setCheck(true);
-    } catch (err) {
-      enqueueSnackbar(err.message, { variant: 'error', autoHideDuration: 2000 });
+    } else {
+      enqueueSnackbar("OTP không hợp lệ!", { variant: 'error', autoHideDuration: 2000 });
     }
   };
 
@@ -58,10 +57,12 @@ export default function RegisterForm(props) {
       .required('Vui lòng nhập lại mật khảu')
       .oneOf([yup.ref('password')], 'Mật khẩu không khớp'),
   });
+
   const schemaOtp = yup.object().shape({
     email: yup.string().required('Vui lòng nhập email').email('Email không hơp lệ  '),
     otp: yup.string().required('Vui lòng nhập mã otp'),
   });
+
   const formOTP = useForm({
     defaultValues: {
       email: '',
@@ -148,7 +149,15 @@ export default function RegisterForm(props) {
               >
                 Xác nhận
               </Button>
-            </Box>{' '}
+              <Box textAlign="center" >
+                <Button onClick={() =>{
+                  const email = formOTP.getValues('email');
+                  getOTP(email)}}
+                  style={{ textTransform: 'none' }}>
+                  Lấy lại mã OTP
+                </Button>
+              </Box>
+            </Box>
           </>
         )}
       </form>
