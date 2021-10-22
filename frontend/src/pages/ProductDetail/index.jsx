@@ -43,7 +43,7 @@ function ProductDetail() {
     const {enqueueSnackbar} = useSnackbar();
     const [diaChi, setDiachi] = useState([]);
     const [open, setOpen] = useState(false);
-
+    const [sachCK, setSachCK] = useState([sach])
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -54,15 +54,14 @@ function ProductDetail() {
     };
 
 
-
     const addCart = () => {
         dispatch(
             addtoCart({
                 idsach: sach.idsach,
                 tensach: sach.tensach,
-                gia: sach.gia_sach,
-                soluong: parseInt(soluong),
-                hinhanh: sach.hinhanh,
+                gia_sach: sach.gia_sach,
+                so_luong: parseInt(soluong),
+                hinh_anh: sach.hinhanh,
             })
         );
     };
@@ -70,12 +69,20 @@ function ProductDetail() {
         (async () => {
             const res = await SachApi.getById(idsach);
             setSach(res);
+            setSachCK([{
+                idsach: res.idsach,
+                tensach: res.tensach,
+                phan_tram: res.phan_tram,
+                gia_sach: res.gia_sach,
+                so_luong: parseInt(soluong),
+                hinh_anh: res.hinhanh,
+            }])
             if (isLogin) {
                 const diachi = await  DiaChiAPI.get();
                 setDiachi(diachi);
             }
         })();
-    }, [isLogin]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [isLogin, soluong]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const checkout =async ()=>{
         if(!isLogin){
@@ -83,8 +90,9 @@ function ProductDetail() {
         }else {
             handleClickOpen();
         }
-
     }
+
+
     return (
         <Page title={sach.tensach}>
             <Box>
@@ -274,12 +282,9 @@ function ProductDetail() {
                 <DialogContent>
                     <Checkout
                         diachi={diaChi}
-                        idsach={sach.idsach}
-                        hinh_anh={sach.hinhanh}
-                        tensach={sach.tensach}
-                        soluong={soluong}
-                        phan_tram={sach.phan_tram}
-                        gia_sach={sach.gia_sach}
+                        sach={sachCK}
+                        closeDialog={handleClose}
+                        tong_gia={sach.phan_tram ? sach.gia_sach * (100 - sach.phan_tram) * soluong / 100 : sach.gia_sach * soluong}
                     />
                 </DialogContent>
                 </SimpleBar>

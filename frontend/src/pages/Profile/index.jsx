@@ -6,6 +6,7 @@ import Page from '../../Component/Page';
 import {useDispatch} from "react-redux";
 import {getProfile} from "../../Store/profileSlice";
 import SoDiaChi from "./SoDiaChi";
+import DonHang from "./DonHang";
 const useStyle = makeStyles((theme) => ({
   root: {
     marginTop: '10rem',
@@ -40,7 +41,7 @@ export default function Profile() {
   const list = [
     {
       index: 0,
-      primary: 'Bảng điều khiển tài khoản',
+      primary: 'Thông tài khoản',
     },
     {
       index: 1,
@@ -70,7 +71,7 @@ export default function Profile() {
   return (
     <Page title="Thông tin cá nhân">
       <Grid container spacing={2} style={{ height: '100vh' }}>
-        <Grid item lg={3}>
+        <Grid item lg={2}>
           <Paper elevation={4}>
             <List component="nav">
               {list.map((element) => (
@@ -92,9 +93,10 @@ export default function Profile() {
             </List>
           </Paper>
         </Grid>
-        <Grid item lg={9}>
+        <Grid item lg={10}>
           {selectedIndex === 0 && <Account />}
           {selectedIndex === 1 && <SoDiaChi/>}
+          {selectedIndex === 2 && <DonHang/>}
 
         </Grid>
       </Grid>

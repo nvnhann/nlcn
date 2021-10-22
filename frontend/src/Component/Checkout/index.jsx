@@ -1,13 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {
-    AppBar, Avatar,
-    Box, Button, Checkbox, Chip, Divider,
+    AppBar,
+    Avatar,
+    Box,
+    Button,
+    Checkbox,
+    Chip,
+    Divider,
     FormControlLabel,
-    FormLabel, Grid, IconButton,
-    makeStyles, Radio,
+    FormLabel,
+    Grid,
+    makeStyles,
+    Radio,
     RadioGroup,
-    TextField,
     Toolbar,
     Typography
 } from "@material-ui/core";
@@ -16,22 +22,16 @@ import DiaChiAPI from "../../API/DiaChiAPI";
 import InputText from "../Form-control/InputText";
 import {useSnackbar} from "notistack";
 import {fCurrency} from "../../ultils/fCurrentcy";
-import { PayPalButton } from "react-paypal-button-v2";
+import {PayPalButton} from "react-paypal-button-v2";
 import {useSelector} from "react-redux";
-
-
+import HoaDonAPI from "../../API/HoaDonAPI";
 
 
 Checkout.propTypes = {
-    idtk: PropTypes.number,
-    idsach: PropTypes.string,
     diachi: PropTypes.array,
-    hinh_anh: PropTypes.string,
-    tensach: PropTypes.string,
-    soluong: PropTypes.number,
-    gia_sach: PropTypes.number,
-    phan_tram: PropTypes.number,
-    closeDialog: PropTypes.func
+    closeDialog: PropTypes.func,
+    sach: PropTypes.array,
+    tong_gia: PropTypes.number
 };
 
 const useStyles = makeStyles(theme => ({
@@ -55,36 +55,44 @@ const useStyles = makeStyles(theme => ({
 function Checkout(props) {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
-    const [showForm, setShowForm] = useState(false);
+    const checkDc = !!props.diachi[0];
+    const [showForm, setShowForm] = useState( !checkDc);
     const [checked, setChecked] = useState(false);
     const [diaChi, setDiachi] = useState([]);
     const idtk = useSelector(state => state.user.current.id);
     const [infor, setInfor] = useState({
-        idtk: idtk,
-        idsach: props.idsach,
-        soluong: props.soluong,
-        iddc: props.diachi[0].iddc,
-        gia: props.phan_tram ? props.gia_sach * (100 - props.phan_tram) / 100 : props.gia_sach
+        iddc: checkDc ? props.diachi[0].iddc : ''
     });
-    const options ={
+    const options = {
         clientId: "Ae_6rwFIgAMy-SefAgBIw2h3rfyLCmbph_p5x7fbJzQJuqH57pCrr4whyRsGiY8Xr-EnqLQ-rQ6Wu7xr",
         currency: "USD"
     }
     const [count, setCount] = useState(0);
-    useEffect(()=>{
-        (async ()=>{
+    useEffect(() => {
+        (async () => {
             const res = await DiaChiAPI.get();
             setDiachi(res);
         })();
-    },[count]);
+    }, [count]);
 
 
-    const onSuccess =  async (payment)=>{
-        const value = infor;
-        value.emailPayPal= payment.payer.email_address;
-        value.Ngay = payment.update_time;
-        console.log(value)
-        enqueueSnackbar('Thanh toán thành công', {variant: 'success', autoHideDuration: 2000});
+    const onSuccess = async (payment) => {
+        const value = {};
+        value.idtk = idtk;
+        value.tong_gia = props.tong_gia;
+        value.emailPayPal = payment.payer.email_address;
+        value.ThoiGian = payment.update_time;
+        value.sach = props.sach;
+        try {
+            await HoaDonAPI.create(value);
+            if(props.closeDialog){
+                props.closeDialog()
+            }
+            enqueueSnackbar('Thanh toán thành công', {variant: 'success', autoHideDuration: 2000});
+        } catch (err) {
+            enqueueSnackbar('Lỗi tạo hóa đơn', {variant: 'error', autoHideDuration: 2000});
+        }
+
     }
 
 
@@ -114,14 +122,18 @@ function Checkout(props) {
             await DiaChiAPI.create(value);
             enqueueSnackbar('Thêm địa chỉ thành công', {variant: 'success', autoHideDuration: 2000});
             setShowForm(false);
-            setCount(e => e + 1)
+            setCount(e => e + 1);
+            const res = await DiaChiAPI.get();
+            setInfor(prevState => ({
+                ...prevState,
+                iddc:res[res.length-1].iddc
+            }));
+
+
         } catch (error) {
             enqueueSnackbar(error.message, {variant: 'error', autoHideDuration: 2000});
         }
-        setInfor(prevState => ({
-            ...prevState,
-            iddc: diaChi[0].iddc
-        }));
+
     }
     return (
         <Box my={2}>
@@ -137,106 +149,115 @@ function Checkout(props) {
                 <RadioGroup
                     name="thongtingiaohang"
                     value={infor.iddc}
-                    onChange={e=>setInfor(prevState =>({
+                    onChange={e => setInfor(prevState => ({
                         ...prevState,
                         iddc: e.target.value
                     }))}>
-                    {diaChi.map(e=>(
-                        <FormControlLabel onClick={()=>{setShowForm(false)}}  key={e.iddc} value={e.iddc} control={<Radio />} label={e.ho +' '+ e.ten + " | "+e.sdt+" | "+e.diachi} />
+                    {diaChi.map(e => (
+                        <FormControlLabel onClick={() => {
+                            setShowForm(false)
+                        }} key={e.iddc} value={e.iddc} control={<Radio/>}
+                                          label={e.ho + ' ' + e.ten + " | " + e.sdt + " | " + e.diachi}/>
                     ))}
-                    <FormControlLabel onClick={()=>{setShowForm(true)}} value="" control={<Radio />} label="Khác..."/>
+                    <FormControlLabel onClick={() => {
+                        setShowForm(true)
+                    }} value="" control={<Radio/>} label="Khác..."/>
                 </RadioGroup>
             </Box>
             {showForm && (
                 <Box>
                     <form onSubmit={form.handleSubmit(handleSubmit)}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={4}><InputText form={form} name="ho" label="Họ"/></Grid>
-                        <Grid item xs={4}><InputText form={form} name="ten" label="Tên"/></Grid>
-                        <Grid item xs={4}><InputText form={form} name="sdt" label="số điện thoại"/></Grid>
-                    </Grid>
+                        <Grid container spacing={2}>
+                            <Grid item xs={4}><InputText form={form} name="ho" label="Họ"/></Grid>
+                            <Grid item xs={4}><InputText form={form} name="ten" label="Tên"/></Grid>
+                            <Grid item xs={4}><InputText form={form} name="sdt" label="số điện thoại"/></Grid>
+                        </Grid>
 
-                    <InputText form={form} name="diachi" label="Địa chỉ" fullWidth/>
-                    <FormControlLabel
-                        control={
-                            <Controller
-                                name="macdinh"
-                                control={form.control}
-                                as={<Checkbox color="primary" onClick={() => setChecked(e => !e)}
-                                />
-                                }
-                            />}
-                        label="Đặt làm địa chỉ mặc định"
-                    />
-                       <div>
-                           <Button
-                               type="submit"
-                               color="primary"
-                               variant="contained"
-                               style={{textTransform: 'none'}}
-                           >
-                               Thêm
-                           </Button>
-                       </div>
+                        <InputText form={form} name="diachi" label="Địa chỉ" fullWidth/>
+                        <FormControlLabel
+                            control={
+                                <Controller
+                                    name="macdinh"
+                                    control={form.control}
+                                    as={<Checkbox color="primary" onClick={() => setChecked(e => !e)}
+                                    />
+                                    }
+                                />}
+                            label="Đặt làm địa chỉ mặc định"
+                        />
+                        <div>
+                            <Button
+                                type="submit"
+                                color="primary"
+                                variant="contained"
+                                style={{textTransform: 'none'}}
+                            >
+                                Thêm
+                            </Button>
+                        </div>
                     </form>
 
                 </Box>
             )}
-            <Divider style={{margin: '1rem 0'}}/>
-            <Box >
-                <Grid container>
-                    <Grid item xs={2}>
-                        <Avatar variant="square" style={{width: '8rem', height: '8rem'}}
-                                src={props.hinh_anh}/>
-                    </Grid>
-                    <Grid item xs={10}>
-                        <Typography variant="h5">{props.tensach}</Typography>
-                        <div>
-                            <Typography component="span">Số lượng: </Typography>
-                            <Typography component="span">{props.soluong}</Typography>
-                        </div>
-                        <Typography component="span" variant="h5" color="secondary">
-                            {props.phan_tram ? fCurrency(props.gia_sach * (100 - props.phan_tram) / 100) : fCurrency(props.gia_sach)}
-                        </Typography>
+            {props.sach.map((s, index) => (
+                <div key={index}>
+                    <Divider style={{margin: '1rem 0'}}/>
+                    <Box>
+                        <Grid container>
+                            <Grid item xs={2}>
+                                <Avatar variant="square" style={{width: '8rem', height: '8rem'}}
+                                        src={s.hinh_anh}/>
+                            </Grid>
+                            <Grid item xs={10}>
+                                <Typography variant="h5">{s.tensach}</Typography>
+                                <div>
+                                    <Typography component="span">Số lượng: </Typography>
+                                    <Typography component="span">{s.so_luong}</Typography>
+                                </div>
+                                <Typography component="span" variant="h5" color="secondary">
+                                    {s.phan_tram ? fCurrency(s.gia_sach * (100 - s.phan_tram) / 100) : fCurrency(s.gia_sach)}
+                                </Typography>
 
-                        {props.phan_tram && <> <Typography
-                            component="span"
-                            variant="body1"
-                            style={{
-                                color: 'text.disabled',
-                                textDecoration: 'line-through',
-                                marginLeft: '1rem'
-                            }}
-                        >
-                            {fCurrency(props.gia_sach)}
-                        </Typography> <Chip
-                            style={{margin: '0 0 .5rem 1rem'}}
-                            color="secondary"
-                            size="small"
-                            label={'-' + props.phan_tram + "%"}
-                        /></>
-                        }
-                    </Grid>
-                </Grid>
-            </Box>
+                                {s.phan_tram && <> <Typography
+                                    component="span"
+                                    variant="body1"
+                                    style={{
+                                        color: 'text.disabled',
+                                        textDecoration: 'line-through',
+                                        marginLeft: '1rem'
+                                    }}
+                                >
+                                    {fCurrency(s.gia_sach)}
+                                </Typography> <Chip
+                                    style={{margin: '0 0 .5rem 1rem'}}
+                                    color="secondary"
+                                    size="small"
+                                    label={'-' + s.phan_tram + "%"}
+                                /></>
+                                }
+                            </Grid>
+                        </Grid>
+                    </Box>
+                </div>
+            ))}
             <Divider style={{margin: '1rem 0'}}/>
             <Typography component="span" variant="h4">Tổng thanh toán: </Typography>
-            <Typography component="span"  variant="h4" color="secondary">{fCurrency(infor.gia)}</Typography>
-          <Box my={1} style={{textAlign: "center"}}>
-              {infor.iddc && (
-                  <PayPalButton
-                      amount={infor.gia}
-                      options={options}
-                      onSuccess={onSuccess}
-                      onError={onError}
-                  />
-              )}
+            <Typography component="span" variant="h4" color="secondary">{fCurrency(props.tong_gia)}</Typography>
+            <Box my={1} style={{textAlign: "center"}}>
+                {infor.iddc && (
+                    <PayPalButton
+                        amount={props.tong_gia}
+                        options={options}
+                        onSuccess={onSuccess}
+                        onError={onError}
+                    />
+                )}
 
-              {!infor.iddc && (<>
-                  <Divider style={{margin: '1rem 0'}}/>
-                  <Typography>Vui lòng chọn thông tin để thanh toán</Typography>
-              </>)}
-          </Box>
+                {!infor.iddc && (<>
+                    <Divider style={{margin: '1rem 0'}}/>
+                    <Typography>Vui lòng chọn thông tin để thanh toán</Typography>
+                </>)}
+            </Box>
         </Box>
     );
 }

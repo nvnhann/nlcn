@@ -32,7 +32,7 @@ require("./app/routers/TheLoai.router")(app);
 require("./app/routers/DiaChi.router")(app);
 require("./app/routers/Sach.router")(app);
 require("./app/routers/KhuyenMai.router")(app);
-
+require("./app/routers/HoaDon.router")(app);
 const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {

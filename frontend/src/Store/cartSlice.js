@@ -17,9 +17,9 @@ const cartSlice = createSlice({
       const newItem = action.payload;
       const index = state.cartItem.findIndex((x) => x.idsach === newItem.idsach);
       if (index >= 0) {
-        state.cartItem[index].soluong += newItem.soluong;
+        state.cartItem[index].so_luong += newItem.so_luong;
         const a = JSON.parse(localStorage.getItem('cart'));
-        a[index].soluong += newItem.soluong;
+        a[index].so_luong += newItem.so_luong;
         localStorage.setItem('cart', JSON.stringify(a));
       } else {
         state.cartItem.push(newItem);
@@ -29,12 +29,12 @@ const cartSlice = createSlice({
       }
     },
     setQuantity(state, action) {
-      const { idsach, soluong } = action.payload;
+      const { idsach, so_luong } = action.payload;
       const index = state.cartItem.findIndex((x) => x.idsach === idsach);
       if (index >= 0) {
-        state.cartItem[index].soluong = soluong;
+        state.cartItem[index].so_luong = so_luong;
         const a = JSON.parse(localStorage.getItem('cart'));
-        a[index].soluong = soluong;
+        a[index].so_luong = so_luong;
         localStorage.setItem('cart', JSON.stringify(a));
       }
     },

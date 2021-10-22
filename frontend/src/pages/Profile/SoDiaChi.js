@@ -150,7 +150,7 @@ function SoDiaChi() {
             <Typography variant="h5" color="primary" style={{margin: '1rem 0'}}>
                 Địa chỉ thanh toán mặc định
             </Typography>
-            {diachi[0]?.diachi && (<>
+            {!!diachi[0]?.mac_dinh && (<>
                 <Typography component="span" style={{margin: '1rem 0'}}>
                     {diachi[0].ho + ' ' + diachi[0].ten + ' | ' + diachi[0].sdt + ' | ' + diachi[0].diachi}
                 </Typography>
