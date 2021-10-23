@@ -78,6 +78,7 @@ function Checkout(props) {
 
     const onSuccess = async (payment) => {
         const value = {};
+        value.iddc = infor.iddc;
         value.idtk = idtk;
         value.tong_gia = props.tong_gia;
         value.emailPayPal = payment.payer.email_address;

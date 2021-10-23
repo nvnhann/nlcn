@@ -61,10 +61,6 @@ export default function Profile() {
     },
     {
       index: 5,
-      primary: 'Thông báo',
-    },
-    {
-      index: 6,
       primary: 'Đổi mật khẩu',
     },
   ];

@@ -21,6 +21,11 @@ const SideBarConfig = [
     icon: getIcon('dashicons:book-alt', color),
   },
   {
+    title: 'Hóa đơn',
+    path: '/dashboard/hoadon',
+    icon: getIcon('icon-park-outline:bill', color),
+  },
+  {
     title: 'Khuyến mãi',
     path: '/dashboard/sale',
     icon: getIcon('whh:sale', color),

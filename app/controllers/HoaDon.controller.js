@@ -9,8 +9,9 @@ exports.create = (req, res)=>{
         email_paypal: req.body.emailPayPal,
         tong_gia: req.body.tong_gia,
         idtk: req.body.idtk,
-        trang_thai: 0,
-        thoi_gian: req.body.ThoiGian
+        iddc: req.body.iddc,
+        thoi_gian: req.body.ThoiGian,
+        trang_thai: 0
     });
 
     HoaDon.create(hoadon, (err, _)=>{
@@ -20,9 +21,10 @@ exports.create = (req, res)=>{
         }
         else{
             let check = true;
+            let i =1;
             req.body.sach.map((value, index)=>{
                 let d1 = new Date();
-                let id_cthd = 'CTHD'+d1.getTime();
+                let id_cthd = 'CTHD'+d1.getTime()+index;
                 const cthd = new CTHD({
                     id_cthd: id_cthd,
                     idhd: idhd,
@@ -73,5 +75,41 @@ exports.getById = (req, res) =>{
                 }
             })
         }
+    })
+}
+
+exports.getAll = (req, res) =>{
+    HoaDon.getAll((err, hd)=>{
+        if(err) {
+            console.log(err);
+            return res.status(500).send({
+                message: err.message || "Some error occurred while retrieving customers."
+            });
+        }else {
+            CTHD.getAll((err, cthd)=>{
+                if(err){
+                    console.log(err);
+                    return res.status(500).send({
+                        message: err.message || "Some error occurred while retrieving customers."
+                    });
+                }
+                else {
+                    res.send({hd: hd, cthd: cthd})
+                }
+            })
+        }
+    })
+}
+
+exports.huydon = (req, res) =>{
+    const idhd = req.params.idhd;
+    HoaDon.huy(idhd, (err, _)=>{
+        if (err){
+            console.log(err)
+            if(err.kind === 'not_found'){
+                return res.status(404).send({message: 'not found idhd with id= '+idhd})
+            } else return  res.status(500).send({message: 'cant not cancle order!!'});
+        }
+       else return res.send({message: 'cancle order successfully!!'})
     })
 }

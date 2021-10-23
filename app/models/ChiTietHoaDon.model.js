@@ -24,4 +24,11 @@ ChiTietHD.getById = (idtk, rs)=>{
         })
 }
 
+ChiTietHD.getAll = (rs)=>{
+    sql.query("SELECT ct.*, s.tensach, s.hinhanh from hoa_don hd LEFT JOIN chi_tiet_hd ct ON hd.idhd = ct.idhd  LEFT JOIN sach s ON s.idsach = ct.idsach", (err, data)=>{
+            if (err) return rs(err,null);
+            rs(null,data)
+        })
+}
+
 module.exports = ChiTietHD;
