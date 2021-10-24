@@ -113,3 +113,29 @@ exports.huydon = (req, res) =>{
        else return res.send({message: 'cancle order successfully!!'})
     })
 }
+
+exports.XacNhan = (req, res) =>{
+    const idhd = req.params.idhd;
+    HoaDon.XacNhan(idhd, (err, _)=>{
+        if (err){
+            console.log(err)
+            if(err.kind === 'not_found'){
+                return res.status(404).send({message: 'not found idhd with id= '+idhd})
+            } else return  res.status(500).send({message: 'cant not conform order!!'});
+        }
+        else return res.send({message: 'conform order successfully!!'})
+    })
+}
+
+exports.XacNhanHuy = (req, res) =>{
+    const idhd = req.params.idhd;
+    HoaDon.XacNhanHuy(idhd, (err, _)=>{
+        if (err){
+            console.log(err)
+            if(err.kind === 'not_found'){
+                return res.status(404).send({message: 'not found idhd with id= '+idhd})
+            } else return  res.status(500).send({message: 'cant not cancle order!!'});
+        }
+        else return res.send({message: 'conform cancle order successfully!!'})
+    })
+}

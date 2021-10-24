@@ -32,7 +32,10 @@ Profile.create = (newProfile, rs) => {
 
 Profile.get = (idtk, rs) => {
     sql.query(
-        `SELECT tt.ho, tt.ten, tt.sdt, dc.diachi from thong_tin_tk tt LEFT JOIN dia_chi dc ON tt.idtk=dc.idtk WHERE dc.mac_dinh=1 AND tt.idtk= '${idtk}'`,
+        `SELECT tt.ho, tt.ten, tt.sdt, dc.diachi, tong_don.so_hd, tg.tong_gia
+from (SELECT COUNT(idhd) as so_hd, idtk  FROM hoa_don  WHERE trang_thai = 2 ) as tong_don,
+(SELECT sum(tong_gia) as tong_gia, idtk  FROM hoa_don WHERE trang_thai = 2) as tg,
+thong_tin_tk tt LEFT JOIN dia_chi dc ON tt.idtk=dc.idtk WHERE dc.mac_dinh=1 AND tt.idtk = tong_don.idtk and tg.idtk = tt.idtk AND tt.idtk= '${idtk}'`,
         (err, res) => {
             if (err) {
                 console.log(err);

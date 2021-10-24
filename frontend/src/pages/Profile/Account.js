@@ -19,6 +19,7 @@ import InputText from "../../Component/Form-control/InputText";
 import {useSnackbar} from "notistack";
 import {unwrapResult} from "@reduxjs/toolkit";
 import {updateProfile} from "../../Store/profileSlice";
+import {fCurrency} from "../../ultils/fCurrentcy";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -26,8 +27,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 function Account() {
-    const date = new Date();
-    const year = date.getFullYear();
     const profile = useSelector((state) => state.profile.account);
     const email = useSelector((state) => state.user.current.email);
     const [open, setOpen] = useState(false);
@@ -95,18 +94,18 @@ function Account() {
             <Divider style={{margin: '1rem 0'}}/>
             <div style={{marginBottom: '1rem'}}>
                 <Typography variant="h6" component="span" style={{marginRight: '1rem'}}>
-                    Đơn hàng thành công năm {year}:
+                    Đơn hàng thành công:
                 </Typography>
                 <Typography variant="h6" component="span" color="secondary">
-                    0
+                    {profile.so_hd}
                 </Typography>
             </div>
             <div style={{marginBottom: '1rem'}}>
                 <Typography variant="h6" component="span" style={{marginRight: '1rem'}}>
-                    Số tiền đã thanh toán năm {year}:
+                    Số tiền đã thanh toán:
                 </Typography>
                 <Typography variant="h6" component="span" color="secondary">
-                    0
+                    {fCurrency(profile.tong_gia)}
                 </Typography>
             </div>
             <Divider style={{marginBottom: '1rem'}}/>

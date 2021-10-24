@@ -39,5 +39,20 @@ HoaDon.huy = (idhd, rs) =>{
     })
 }
 
+HoaDon.XacNhan = (idhd, rs)=>{
+    sql.query("UPDATE hoa_don SET trang_thai = ? WHERE idhd = ?",[2, idhd],(err, data)=>{
+        if(err) return rs(err, null);
+        if(data.affectedRows === 0) return rs({kind: 'not_found'}, null);
+        rs(null, data)
+    })
+}
+
+HoaDon.XacNhanHuy =(idhd,rs)=>{
+    sql.query("UPDATE hoa_don SET trang_thai = ? WHERE idhd = ?", [4, idhd], (err,data)=>{
+        if(err) return rs(err, null);
+        if(data.affectedRows === 0) return rs({kind: 'not_found'}, null);
+        rs(null, data)
+    })
+}
 
 module.exports = HoaDon;

@@ -20,6 +20,7 @@ import {DataGrid} from "@mui/x-data-grid";
 import {fCurrency} from "../../ultils/fCurrentcy";
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
+import {useSnackbar} from "notistack";
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -27,12 +28,16 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function HoaDonAdmin() {
+    const [openX, setOpenX] = useState(false);
+    const [openH, setOpenH] = useState(false);
     const [searchText, setSearchText] = useState('');
     const [data, setData] = useState({});
     const [filterData, setFilterData] = useState(data);
-    const [ref, setRef] = useState(0);
     const [open, setOpen] = useState(false);
-    const [idhd, setIdhd] = useState('')
+    const [idhd, setIdhd] = useState('');
+    const [ref, setRef] = useState(0);
+    const {enqueueSnackbar} = useSnackbar();
+
     const requestSearch = (searchValue) => {
         if (searchValue === '') {
             setSearchText(searchValue);
@@ -57,6 +62,24 @@ function HoaDonAdmin() {
         setOpen(false);
     };
 
+    const handleClickOpenH = () => {
+        setOpenH(true);
+    };
+
+    const handleCloseH = (e, r) => {
+        if (r === 'backdropClick' || r === 'escapeKeyDown') return;
+        setOpenH(false);
+    };
+
+    const handleClickOpenX = () => {
+        setOpenX(true);
+    };
+
+    const handleCloseX = (e, r) => {
+        if (r === 'backdropClick' || r === 'escapeKeyDown') return;
+        setOpenX(false);
+    };
+
     useEffect(() => {
         (async () => {
             const res = await HoaDonAPI.getAll();
@@ -66,6 +89,30 @@ function HoaDonAdmin() {
     }, [ref]);
 
 
+    const XacNhan = async () => {
+        try {
+            await HoaDonAPI.xacnhan(idhd);
+            enqueueSnackbar('Xác nhận đơn hàng thành công', {variant: 'success', autoHideDuration: 2000});
+            setRef(e => e + 1);
+            handleCloseH();
+            setIdhd('');
+        } catch (error) {
+            enqueueSnackbar(error.message, {variant: 'error', autoHideDuration: 2000});
+        }
+    }
+
+    const XacNhanHuy = async () => {
+        try {
+            await HoaDonAPI.xacnhanhuy(idhd);
+            enqueueSnackbar('Xác nhận hủy đơn hàng thành công', {variant: 'success', autoHideDuration: 2000});
+            setRef(e => e + 1);
+            handleCloseX();
+            setIdhd('');
+        } catch (error) {
+            enqueueSnackbar(error.message, {variant: 'error', autoHideDuration: 2000});
+        }
+    }
+
     const columns = [
         {
             field: 'action',
@@ -73,33 +120,94 @@ function HoaDonAdmin() {
             width: 250,
             renderCell: (params) => (
                 <>
-                    <strong>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            style={{textTransform: 'none', marginRight: '1rem'}}
-                            size="small"
-                        >
-                            Xác nhận
-                        </Button>
-                    </strong>
+                    {(params.row.trang_thai === 0) && (
+                        <>
+                        <strong>
+                            <Button
+                                variant="contained"
+                                onClick={()=>{
+                                    handleClickOpenH();
+                                    setIdhd(params.row.id);
+                                }}
+                                color="primary"
+                                style={{textTransform: 'none', marginRight: '1rem'}}
+                                size="small"
+                            >
+                                Xác nhận
+                            </Button>
+                        </strong>
 
-                    <strong>
+                        <strong>
                         <Button
-                            variant="contained"
-                            color="secondary"
-                            style={{textTransform: 'none', marginRight: '1rem'}}
-                            size="small"
+                        variant="contained"
+                        color="secondary"
+                        onClick={()=>{
+                        handleClickOpenX();
+                        setIdhd(params.row.id);
+                    }}
+                        style={{textTransform: 'none', marginRight: '1rem'}}
+                        size="small"
                         >
-                            Hủy
+                        Hủy
                         </Button>
-                    </strong>
-                    <strong>
+                        </strong>
+                        <strong>
                         <IconButton onClick={()=>{
-                            handleClickOpen()
-                            setIdhd(params.row.id);
-                        }}> <Icon icon="ei:eye"/></IconButton>
-                    </strong>
+                        handleClickOpen()
+                        setIdhd(params.row.id);
+                    }}> <Icon icon="ei:eye"/></IconButton>
+                        </strong>
+                        </>
+                    )}
+
+                    {(params.row.trang_thai === 2) && (
+                        <>
+                            <Button
+                                disabled
+                                style={{textTransform: 'none', color: '#b26500'}}
+                            >
+                                Đã xác nhận
+                            </Button>
+                            <IconButton onClick={()=>{
+                                handleClickOpen()
+                                setIdhd(params.row.id);
+                            }}> <Icon icon="ei:eye"/></IconButton>
+                        </>
+
+                    )}
+
+                    {(params.row.trang_thai === 4) && (
+                        <>
+                            <Button
+                                disabled
+                                style={{textTransform: 'none', color: '#ab003c'}}
+                            >
+                                Đã hủy
+                            </Button>
+                        </>
+
+                    )}
+
+                    {(params.row.trang_thai === 3) && (
+                        <>
+                            <Button
+                                style={{textTransform: 'none'}}
+                                variant="contained"
+                                color="secondary"
+                                onClick={()=>{
+                                    handleClickOpenX()
+                                    setIdhd(params.row.id);
+                                }}
+                            >
+                                Yêu cầu hủy
+                            </Button>
+                            <IconButton onClick={()=>{
+                                handleClickOpen()
+                                setIdhd(params.row.id);
+                            }}> <Icon icon="ei:eye"/></IconButton>
+                        </>
+
+                    )}
                 </>
             ),
         },
@@ -138,13 +246,17 @@ function HoaDonAdmin() {
             headerName: 'Thời gian',
             width: 300,
         },
+        {
+            field: 'trang_thai',
+            hide: true
+        }
     ];
 
     const rows = [];
 
     const ttensach = (a,e)=>{
         let tensach = '';
-        a.map((ev) => {
+        a.forEach((ev) => {
             if(ev.idhd === e.idhd) {
                 tensach+=ev.tensach;
             }
@@ -161,6 +273,7 @@ function HoaDonAdmin() {
             email_paypal: e.email_paypal,
             tong_gia: fCurrency(e.tong_gia),
             thoi_gian: formatDateTime(e.thoi_gian),
+            trang_thai: e.trang_thai,
             action: e.idhd,
         });
     });
@@ -338,19 +451,94 @@ function HoaDonAdmin() {
                         ))}
                     </DialogContent>
                     <DialogActions>
-                        <Button
-                            color="primary"
-                            variant="contained"
-                            style={{ textTransform: 'none' }}
-                        >
-                            Xác nhận
-                        </Button>
-                        <Button onClick={handleClose} style={{ textTransform: 'none' }}>
+                        <Button onClick={()=>{
+                            handleClose();
+                            setIdhd('')
+                        }} style={{ textTransform: 'none' }}>
                             Đóng
                         </Button>
                     </DialogActions>
                 </SimpleBar>
             </Dialog>
+
+            <Dialog
+                fullWidth
+                maxWidth="xs"
+                open={openX}
+                onClose={handleCloseX}
+                TransitionComponent={Transition}>
+                <DialogTitle>
+                    <IconButton
+                        aria-label="close"
+                        onClick={handleCloseX}
+                        style={{
+                            position: 'absolute',
+                            right: 8,
+                            top: 8,
+                            color: (theme) => theme.palette.grey[500],
+                        }}
+                    >
+                        <Icon icon="majesticons:close" color="#6b7280" />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                    <Typography style={{margin: '1rem 0'}} align="center" color="secondary" variant="h5">Xác nhận hủy đơn hàng</Typography>
+                </DialogContent>
+
+                <DialogActions>
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        style={{ textTransform: 'none' }}
+                        onClick={XacNhanHuy}
+                    >
+                        Xác nhận
+                    </Button>
+                    <Button onClick={handleCloseX} style={{ textTransform: 'none' }}>
+                        Đóng
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                fullWidth
+                maxWidth="xs"
+                open={openH}
+                onClose={handleCloseH}
+                TransitionComponent={Transition}>
+                <DialogTitle>
+                    <IconButton
+                        aria-label="close"
+                        onClick={handleCloseH}
+                        style={{
+                            position: 'absolute',
+                            right: 8,
+                            top: 8,
+                            color: (theme) => theme.palette.grey[500],
+                        }}
+                    >
+                        <Icon icon="majesticons:close" color="#6b7280" />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                    <Typography style={{margin: '1rem 0'}} align="center" color="secondary" variant="h5">Xác nhận đơn hàng</Typography>
+                </DialogContent>
+
+                <DialogActions>
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={XacNhan}
+                        style={{ textTransform: 'none' }}
+                    >
+                        Xác nhận
+                    </Button>
+                    <Button onClick={handleCloseH} style={{ textTransform: 'none' }}>
+                        Đóng
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
         </Page>
     );
 }

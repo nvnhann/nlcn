@@ -136,14 +136,15 @@ function DonHang() {
                                     {(e.trang_thai === 4) && (
                                         <Button
                                             disabled
-                                            color="secondary">
+                                            style={{textTransform: 'none', color: '#ab003c'}}
+                                        >
                                             Đã hủy
                                         </Button>
                                     )}
                                     {(e.trang_thai === 2) && (
                                         <Button
                                             disabled
-                                            color="secondary">
+                                            style={{textTransform: 'none', color: '#b26500'}}>
                                             Đã xác nhận
                                         </Button>
                                     )}
