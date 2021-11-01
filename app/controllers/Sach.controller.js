@@ -57,7 +57,7 @@ exports.get = (req, res) => {
   Sach.get((err, data) => {
     if (err) {
       console.log(err);
-      return res.status(500).send({ message: error });
+      return res.status(500).send({ message: err });
     }
     res.send(data);
   });
@@ -67,7 +67,7 @@ exports.getSachkm = (req, res) => {
   Sach.getSachkm((err, data) => {
     if (err) {
       console.log(err);
-      return res.status(500).send({ message: error });
+      return res.status(500).send({ message: err});
     }
     res.send(data);
   });
