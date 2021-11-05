@@ -14,7 +14,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to ct466 application." });
 });

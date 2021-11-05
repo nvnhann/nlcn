@@ -2,7 +2,7 @@ const NgonNgu = require("../models/NgonNgu.model");
 
 exports.create = (req, res) => {
   const ngonngu = new NgonNgu({
-    ngonngu: req.body.ngonngu,
+    ngon_ngu: req.body.ngonngu,
   });
 
   NgonNgu.create(ngonngu, (err, _) => {
@@ -40,7 +40,7 @@ exports.delete = (req, res) => {
 };
 exports.update = (req, res) => {
   const ngonngu = new NgonNgu({
-    ngonngu: req.body.ngonngu,
+    ngon_ngu: req.body.ngonngu,
   });
   const idnn = req.params.idnn;
   NgonNgu.update(idnn, ngonngu, (err, _) => {

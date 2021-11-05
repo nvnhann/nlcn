@@ -1,9 +1,9 @@
-const NhaXuatBan = require("../models/NhanXuatBan.model");
+const NhaXuatBan = require("../models/NhaXuatBan.model");
 
 exports.create = (req, res) => {
   const nhaxuatban = new NhaXuatBan({
     tennxb: req.body.tennxb,
-    diachi: req.body.diachi,
+    dia_chi: req.body.diachi,
   });
 
   NhaXuatBan.create(nhaxuatban, (err, data) => {
@@ -47,7 +47,7 @@ exports.delete = (req, res) => {
 exports.update = (req, res) => {
   const nhaxuatban = new NhaXuatBan({
     tennxb: req.body.tennxb,
-    diachi: req.body.diachi,
+    dia_chi: req.body.diachi,
   });
 
   NhaXuatBan.update(req.params.idnxb, nhaxuatban, (err, _) => {

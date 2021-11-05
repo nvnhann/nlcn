@@ -1,11 +1,11 @@
 const sql = require('./db');
 
 const NgonNgu = function (ngonngu) {
-  this.ngonngu = ngonngu.ngonngu;
+  this.ngon_ngu = ngonngu.ngon_ngu;
 };
 
 NgonNgu.create = (newNgonNgu, rs) => {
-  sql.query('INSERT INTO `ngon_ngu` (`ngon_ngu`) VALUES (?)', [newNgonNgu.ngonngu], (err, _) => {
+  sql.query('INSERT INTO `ngon_ngu` SET ?', newNgonNgu, (err, _) => {
     if (err) {
       console.log(err);
       return rs(err, null);
@@ -13,6 +13,7 @@ NgonNgu.create = (newNgonNgu, rs) => {
     rs(null, { ...newNgonNgu });
   });
 };
+
 NgonNgu.getAll = (rs) => {
   sql.query('SELECT * FROM `ngon_ngu`', (err, data) => {
     if (err) {
@@ -34,8 +35,8 @@ NgonNgu.delete = (idnn, rs) => {
 };
 NgonNgu.update = (idnn, newNgonNgu, rs) => {
   sql.query(
-    'UPDATE `ngon_ngu` SET `ngon_ngu` = ? WHERE `ngon_ngu`.`idnn` = ?',
-    [newNgonNgu.ngonngu, idnn],
+    'UPDATE `ngon_ngu` SET ? WHERE `ngon_ngu`.`idnn` = ?',
+    [newNgonNgu, idnn],
     (err, data) => {
       if (err) {
         console.log(err);

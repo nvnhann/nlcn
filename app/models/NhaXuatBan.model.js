@@ -2,13 +2,13 @@ const sql = require('./db');
 
 const NhaXuatBan = function (nhaxuatban) {
   this.tennxb = nhaxuatban.tennxb;
-  this.diachi = nhaxuatban.diachi;
+  this.dia_chi = nhaxuatban.dia_chi;
 };
 
 NhaXuatBan.create = (newNhaXuatBan, rs) => {
   sql.query(
-    'INSERT INTO nha_xuat_ban(tennxb, dia_chi) VALUES (?, ?)',
-    [newNhaXuatBan.tennxb, newNhaXuatBan.diachi],
+    'INSERT INTO nha_xuat_ban SET ?',
+    newNhaXuatBan,
     (err, _) => {
       if (err) {
         console.log(err);
@@ -47,8 +47,8 @@ NhaXuatBan.delete = (idnxb, rs) => {
 
 NhaXuatBan.update = (idnxb, newNhaxuatban, rs) => {
   sql.query(
-    'UPDATE `nha_xuat_ban` SET `tennxb` = ?, `dia_chi` = ? WHERE `nha_xuat_ban`.`idnxb` = ?',
-    [newNhaxuatban.tennxb, newNhaxuatban.diachi, idnxb],
+    'UPDATE `nha_xuat_ban` SET ? WHERE `nha_xuat_ban`.`idnxb` = ?',
+    [newNhaxuatban, idnxb],
     (err, data) => {
       if (err) {
         console.log('error: ', err);

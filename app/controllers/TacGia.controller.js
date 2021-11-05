@@ -3,7 +3,7 @@ const TacGia = require("../models/TacGia.model");
 exports.create = (req, res) => {
   const tacgia = new TacGia({
     hotentg: req.body.hotentg,
-    diachi: req.body.diachi,
+    dia_chi: req.body.diachi,
   });
 
   TacGia.create(tacgia, (err, _) => {
@@ -44,7 +44,7 @@ exports.delete = (req, res) => {
 exports.update = (req, res) => {
   const tacgia = new TacGia({
     hotentg: req.body.hotentg,
-    diachi: req.body.diachi,
+    dia_chi: req.body.diachi,
   });
   TacGia.update(req.params.idtg, tacgia, (err, _) => {
     if (err) {

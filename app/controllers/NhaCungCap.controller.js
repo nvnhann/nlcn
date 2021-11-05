@@ -3,7 +3,7 @@ const NhaCungCap = require("../models/NhaCungCap.model");
 exports.create = (req, res) => {
   const nhacungcap = new NhaCungCap({
     tenncc: req.body.tenncc,
-    diachi: req.body.diachi,
+    dia_chi: req.body.diachi,
   });
 
   NhaCungCap.create(nhacungcap, (err, data) => {
@@ -47,7 +47,7 @@ exports.delete = (req, res) => {
 exports.update = (req, res) => {
   const nhacungcap = new NhaCungCap({
     tenncc: req.body.tenncc,
-    diachi: req.body.diachi,
+    dia_chi: req.body.diachi,
   });
   NhaCungCap.update(req.params.idncc, nhacungcap, (err, _) => {
     if (err) {

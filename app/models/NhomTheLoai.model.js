@@ -5,7 +5,7 @@ const NhomTheLoai = function (nhomtheloai) {
 };
 
 NhomTheLoai.create = (newNhomTheLoai, rs) => {
-  sql.query('INSERT INTO `nhom_the_loai` ( `tenntl`) VALUES ( ?)', [newNhomTheLoai.tenntl], (err, _) => {
+  sql.query('INSERT INTO `nhom_the_loai` SET ?', newNhomTheLoai, (err, _) => {
     if (err) {
       console.log(err);
       return rs(err, null);
@@ -34,8 +34,8 @@ NhomTheLoai.delete = (idntl, rs) => {
 };
 NhomTheLoai.update = (idntl, newNhomTheLoai, rs) => {
   sql.query(
-    'UPDATE `nhom_the_loai` SET `tenntl` = ? WHERE `nhom_the_loai`.`idntl` = ?',
-    [newNhomTheLoai.tenntl, idntl],
+    'UPDATE `nhom_the_loai` SET ? WHERE `nhom_the_loai`.`idntl` = ?',
+    [newNhomTheLoai, idntl],
     (err, data) => {
       if (err) {
         console.log(err);

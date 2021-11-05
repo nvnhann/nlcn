@@ -99,7 +99,7 @@ function NhaCungCap() {
   const submitDelete = async () => {
     try {
       await KichThuotAPI.delete(idkt);
-      enqueueSnackbar('Xóa nhà xuất bản ' + ngang + 'x' + doc + +' thành công', {
+      enqueueSnackbar('Xóa kich thuot ' + ngang + 'x' + doc + ' cm' +' thành công', {
         variant: 'success',
         autoHideDuration: 2000,
       });

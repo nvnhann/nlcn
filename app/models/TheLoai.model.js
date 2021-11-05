@@ -7,8 +7,8 @@ const TheLoai = function (theloai) {
 
 TheLoai.create = (newTheLoai, rs) => {
   sql.query(
-    "INSERT INTO `the_loai` ( `tentl`, `idntl`) VALUES ( ?,?)",
-    [newTheLoai.tentl, newTheLoai.idntl],
+    "INSERT INTO `the_loai` SET ?",
+    newTheLoai,
     (err, _) => {
       if (err) return rs(err, null);
       rs(null, { ...newTheLoai });
@@ -38,8 +38,8 @@ TheLoai.delete = (idtl, rs) => {
 
 TheLoai.update = (idtl, newTheLoai, rs) => {
   sql.query(
-    "UPDATE `the_loai` SET `tentl` = ?, `idntl`=? WHERE `the_loai`.`idtl` = ? ",
-    [newTheLoai.tentl, newTheLoai.idntl, idtl],
+    "UPDATE `the_loai` SET ? WHERE `the_loai`.`idtl` = ? ",
+    [newTheLoai, idtl],
     (err, data) => {
       if (err) return rs(err, null);
       if (data.affectedRows === 0) return rs({ kind: "not_found" }, null);
