@@ -1,24 +1,22 @@
 const sql = require('./db');
 const DiaChi = function (diachi) {
   this.diachi = diachi.diachi;
-  this.macdinh = diachi.macdinh;
+  this.mac_dinh = diachi.mac_dinh;
   this.ho = diachi.ho;
   this.sdt= diachi.sdt;
   this.ten= diachi.ten;
   this.idtk = diachi.idtk;
 };
 
-DiaChi.create = (newDiachi, rs) => {
-  const d = new Date();
-  const iddc = 'dc' + d.getTime();
-  if (newDiachi.macdinh === 1) {
+DiaChi.create = (newDiachi,rs) => {
+  if (newDiachi.mac_dinh === 1) {
     sql.query(
-      'INSERT INTO `dia_chi` (`iddc`,`diachi`, `mac_dinh`, `ho`,`ten`,`sdt`, `idtk`) VALUES (?,?,?,?,?,?,?)',
-      [iddc, newDiachi.diachi, newDiachi.macdinh,newDiachi.ho, newDiachi.ten,newDiachi.sdt,newDiachi.idtk],
+      'INSERT INTO `dia_chi` SET ?',
+      newDiachi,
       (err, _) => {
         if (err) return rs(err, null);
         else {
-          sql.query('UPDATE `dia_chi` SET mac_dinh = ? where iddc <> ?', [0, iddc], (err, data) => {
+          sql.query('SELECT @iddc := iddc FROM dia_chi WHERE idtk = ? ORDER BY iddc DESC LIMIT 1 ;UPDATE `dia_chi` SET mac_dinh = 0 where iddc <> @iddc;', [newDiachi.idtk], (err, data) => {
             if (err) return rs(err, null);
             return rs(null, data);
           });
@@ -27,8 +25,8 @@ DiaChi.create = (newDiachi, rs) => {
     );
   } else {
     sql.query(
-        'INSERT INTO `dia_chi` (`iddc`,`diachi`, `mac_dinh`, `ho`,`ten`,`sdt`, `idtk`) VALUES (?,?,?,?,?,?,?)',
-        [iddc, newDiachi.diachi, newDiachi.macdinh,newDiachi.ho, newDiachi.ten,newDiachi.sdt, newDiachi.idtk],
+        'INSERT INTO `dia_chi` SET ?',
+       newDiachi,
       (err, data) => {
         if (err) return rs(err, null);
         return rs(null, data);
@@ -52,15 +50,15 @@ DiaChi.delete = (iddc, rs) => {
   });
 };
 DiaChi.update = (iddc, newDiachi, rs) => {
-  if (newDiachi.macdinh === 1) {
+  if (newDiachi.mac_dinh === 1) {
     sql.query(
-      'UPDATE `dia_chi` SET `diachi` = ?, ho=?, ten=?, sdt=?,`mac_dinh` = ? WHERE `dia_chi`.`iddc` = ?',
-      [newDiachi.diachi, newDiachi.ho, newDiachi.ten,newDiachi.sdt, newDiachi.macdinh, iddc],
+      'UPDATE `dia_chi` SET ? WHERE `dia_chi`.`iddc` = ?',
+      [newDiachi, iddc],
       (err, data) => {
         if (err) return rs(err, null);
         else if (data.affectedRows === 0) return rs({ kind: 'not_found' }, null);
         else {
-          sql.query('UPDATE `dia_chi` SET mac_dinh = ? where iddc <> ?', [0, iddc], (err, data) => {
+          sql.query('UPDATE `dia_chi` SET mac_dinh = 0 where iddc <> ?;', [iddc] ,(err, data) => {
             if (err) return rs(err, null);
             return rs(null, data);
           });
@@ -69,8 +67,8 @@ DiaChi.update = (iddc, newDiachi, rs) => {
     );
   } else {
     sql.query(
-      'UPDATE `dia_chi` SET `diachi` = ?,ho=?,ten=?, sdt=?, `mac_dinh` = ? WHERE `dia_chi`.`iddc` = ? ',
-      [newDiachi.diachi, newDiachi.ho, newDiachi.ten,newDiachi.sdt, newDiachi.macdinh, iddc],
+      'UPDATE `dia_chi` SET ? WHERE `dia_chi`.`iddc` = ? ',
+      [newDiachi, iddc],
       (err, data) => {
         if (err) return rs(err, null);
         return rs(null, data);

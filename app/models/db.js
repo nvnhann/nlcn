@@ -5,7 +5,9 @@ const connect = mysql.createPool({
     host: dbconfig.HOST,
     user: dbconfig.USER,
     password: dbconfig.PASSWORD,
-    database: dbconfig.DB
+    database: dbconfig.DB,
+    multipleStatements: true
+
 });
 
 connect.query('SELECT 1 + 1 AS solution', function (error, results, fields) {

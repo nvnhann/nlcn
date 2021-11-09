@@ -27,10 +27,11 @@ import DiaChiAPI from "../../API/DiaChiAPI";
 import Checkout from "../../Component/Checkout";
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
+import {shortString} from "../../ultils/shortString";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
-
 
 
 function ProductDetail() {
@@ -43,7 +44,8 @@ function ProductDetail() {
     const {enqueueSnackbar} = useSnackbar();
     const [diaChi, setDiachi] = useState([]);
     const [open, setOpen] = useState(false);
-    const [sachCK, setSachCK] = useState([sach])
+    const [sachCK, setSachCK] = useState([sach]);
+    const [show, setShow] = useState(true);
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -78,16 +80,17 @@ function ProductDetail() {
                 hinh_anh: res.hinhanh,
             }])
             if (isLogin) {
-                const diachi = await  DiaChiAPI.get();
+                const diachi = await DiaChiAPI.get();
                 setDiachi(diachi);
             }
+            console.log(res)
         })();
     }, [isLogin, soluong]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const checkout =async ()=>{
-        if(!isLogin){
+    const checkout = async () => {
+        if (!isLogin) {
             enqueueSnackbar('Vui lòng đăng nhập để thanh toán', {variant: 'error', autoHideDuration: 2000});
-        }else {
+        } else {
             handleClickOpen();
         }
     }
@@ -100,7 +103,6 @@ function ProductDetail() {
                     <Grid container>
                         <Grid item xs={4}>
                             <CardMedia component="img" image={sach.hinhanh} style={{boxShadow: '16px'}}/>
-
                             <Grid container style={{marginTop: '1rem'}}>
                                 <Grid item xs={6}>
                                     <Button
@@ -200,6 +202,7 @@ function ProductDetail() {
                                                 value={soluong}
                                                 onChange={(e) => {
                                                     if (e.target.value < 1) return setSoluong(1);
+                                                    else if (e.target.value > sach.so_luong) return setSoluong(sach.so_luong);
                                                     else setSoluong(e.target.value);
                                                 }}
                                             />
@@ -255,8 +258,23 @@ function ProductDetail() {
                                     </Grid>
                                     <Divider style={{margin: '1rem 0'}}/>
                                     <Typography component="div" style={{whiteSpace: 'pre-line'}}>
-                                        {sach.mo_ta}
+                                        {show ? shortString(sach.mo_ta) : sach.mo_ta}
                                     </Typography>
+                                    <Box textAlign="center">
+                                        {show ? (<Button variant="outlined"
+                                                         onClick={()=> setShow(false)}
+                                                        color="primary"
+                                                        style={{textTransform: 'none', width: '12rem', margin: '.5rem 0'}}
+                                        >
+                                            Xem thêm
+                                        </Button>) : (<Button variant="outlined"
+                                                              onClick={()=> setShow(true)}
+                                                              color="primary"
+                                                              style={{textTransform: 'none', width: '12rem', margin: '.5rem 0'}}
+                                        >
+                                            Thu gọn
+                                        </Button>)}
+                                    </Box>
                                 </CardContent>
                             </Card>
                         </Grid>
@@ -278,15 +296,15 @@ function ProductDetail() {
                         <Icon icon="majesticons:close" color="#6b7280"/>
                     </IconButton>
                 </DialogTitle>
-                <SimpleBar style={{ maxHeight: 600 }}>
-                <DialogContent>
-                    <Checkout
-                        diachi={diaChi}
-                        sach={sachCK}
-                        closeDialog={handleClose}
-                        tong_gia={sach.phan_tram ? sach.gia_sach * (100 - sach.phan_tram) * soluong / 100 : sach.gia_sach * soluong}
-                    />
-                </DialogContent>
+                <SimpleBar style={{maxHeight: 600}}>
+                    <DialogContent>
+                        <Checkout
+                            diachi={diaChi}
+                            sach={sachCK}
+                            closeDialog={handleClose}
+                            tong_gia={sach.phan_tram ? sach.gia_sach * (100 - sach.phan_tram) * soluong / 100 : sach.gia_sach * soluong}
+                        />
+                    </DialogContent>
                 </SimpleBar>
             </Dialog>
         </Page>

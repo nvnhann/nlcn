@@ -28,7 +28,7 @@ const MainStyle = styled('div')(({ theme }) => ({
 }));
 export default function HomePage() {
   return (
-    <SimpleBar style={{ maxHeight: 700 }}>
+    <SimpleBar style={{ maxHeight: 885 }}>
       <RootStyle>
         <Helmet>
           <title>RIKUO</title>

@@ -5,10 +5,7 @@ exports.create = (req, res) => {
   const file = req.file;
   const name = file?.destination + "/" + file?.filename;
   const filename = name.replace("./frontend/public/", "/");
-  const d = new Date();
-  const idsach = "id" + d.getTime();
   const sach = new Sach({
-    idsach: idsach,
     tensach: data.tensach,
     gia_sach: data.gia_sach,
     hinhanh: !!filename ? filename : "",

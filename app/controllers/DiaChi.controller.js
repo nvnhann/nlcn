@@ -3,13 +3,12 @@ const DiaChi = require('../models/DiaChi.model');
 exports.create = (req, res) => {
   const diachi = new DiaChi({
     diachi: req.body.diachi,
-    macdinh: req.body.macdinh,
+    mac_dinh: req.body.macdinh,
     ho: req.body.ho,
     sdt: req.body.sdt,
     ten: req.body.ten,
     idtk: req.idtk,
   });
-console.log(diachi);
   DiaChi.create(diachi, (err, _) => {
     if (err) {
       console.log(err);
@@ -46,11 +45,13 @@ exports.update = (req, res) => {
     diachi: req.body.diachi,
     ho: req.body.ho,
     ten: req.body.ten,
-    macdinh: req.body.macdinh,
-    sdt: req.body.sdt
+    mac_dinh: req.body.macdinh,
+    sdt: req.body.sdt,
+    idtk: req.idtk
   });
   DiaChi.update(iddc, diachi, (err, _) => {
     if (err) {
+      console.log(err);
       if (err.kind === 'not_found') return res.status(404).send({ message: 'not found dia chi with id ' + iddc });
       else return res.status(500).send({ message: 'could not update dia chi with id' + iddc });
     }

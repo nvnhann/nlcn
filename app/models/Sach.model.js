@@ -1,6 +1,5 @@
 const sql = require("./db");
 const Sach = function (sach) {
-  this.idsach = sach.idsach;
   this.tensach = sach.tensach;
   this.gia_sach = sach.gia_sach;
   this.hinhanh = sach.hinhanh;
