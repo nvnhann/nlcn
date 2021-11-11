@@ -88,8 +88,9 @@ function Sale() {
     useEffect(() => {
         (async () => {
             const res = await KhuyenMaiAPI.get();
-            const sach = await SachApi.getSachKm();
-            setSach(sach);
+            const sachkm = await SachApi.getSachKm();
+            console.log(sachkm)
+            setSach(sachkm);
             setData(res);
             setFilterData(res);
         })()
@@ -174,7 +175,6 @@ function Sale() {
             field: 'id',
             headerName: 'ID',
             width: 200,
-            hide: true
         },
         {
             field: 'idsach',
@@ -184,7 +184,7 @@ function Sale() {
         {
             field: 'tensach',
             headerName: 'Tên sách',
-            width: 300,
+            width: 400,
         },
         {
             field: 'phan_tram',

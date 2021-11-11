@@ -1,7 +1,6 @@
 const sql = require('./db');
 
 const ChiTietHD = function (chitiethd){
-    this.id_cthd = chitiethd.id_cthd;
     this.idhd = chitiethd.idhd;
     this.so_luong = chitiethd.so_luong;
     this.gia = chitiethd.gia;
@@ -10,10 +9,12 @@ const ChiTietHD = function (chitiethd){
 }
 
 ChiTietHD.create = (newCTHD, rs)=>{
-    sql.query("INSERT INTO chi_tiet_hd SET ?", newCTHD, (err, data)=>{
+    sql.query("INSERT INTO chi_tiet_hd SET ?; UPDATE sach SET so_luong = so_luong - ? WHERE idsach = ?", [newCTHD, newCTHD.so_luong, newCTHD.idsach], (err, data)=>{
         if(err) return rs(err, null);
         rs(null, data);
-    })
+    });
+
+
 }
 
 ChiTietHD.getById = (idtk, rs)=>{

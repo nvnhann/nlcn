@@ -6,7 +6,7 @@ import {
     CardContent,
     CardMedia,
     Chip, Dialog, DialogContent, DialogTitle,
-    Divider,
+    Divider, FormControlLabel,
     Grid, IconButton,
     Paper, Slide,
     TextField,
@@ -28,6 +28,10 @@ import Checkout from "../../Component/Checkout";
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 import {shortString} from "../../ultils/shortString";
+import ReviewAPI from "../../API/ReviewAPI";
+import {formatDateTime} from "../../ultils/formatDateTime";
+import StarBorderIcon from '@material-ui/icons/StarBorder';
+import {use} from "express/lib/router";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -46,6 +50,9 @@ function ProductDetail() {
     const [open, setOpen] = useState(false);
     const [sachCK, setSachCK] = useState([sach]);
     const [show, setShow] = useState(true);
+    const [review, setReview] = useState({rating: 5, comment: '', idsach: idsach});
+    const [dataRv, setDataRv] = useState([]);
+    const [refrv, setRefrv] = useState(0);
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -83,9 +90,17 @@ function ProductDetail() {
                 const diachi = await DiaChiAPI.get();
                 setDiachi(diachi);
             }
-            console.log(res)
         })();
     }, [isLogin, soluong]); // eslint-disable-line react-hooks/exhaustive-deps
+
+
+    useEffect(() => {
+        (async () => {
+            const rv = await ReviewAPI.getById(idsach);
+            setDataRv(rv);
+        })()
+    }, [refrv]);
+
 
     const checkout = async () => {
         if (!isLogin) {
@@ -93,6 +108,20 @@ function ProductDetail() {
         } else {
             handleClickOpen();
         }
+    }
+
+    const handleSubmitComment = async () => {
+        try {
+            await ReviewAPI.create(review);
+            setRefrv(e=>e+1);
+            setReview(prevState => ({
+                ...prevState,
+                comment: ''
+            }))
+        } catch (error) {
+            console.log(error);
+        }
+
     }
 
 
@@ -262,15 +291,23 @@ function ProductDetail() {
                                     </Typography>
                                     <Box textAlign="center">
                                         {show ? (<Button variant="outlined"
-                                                         onClick={()=> setShow(false)}
-                                                        color="primary"
-                                                        style={{textTransform: 'none', width: '12rem', margin: '.5rem 0'}}
+                                                         onClick={() => setShow(false)}
+                                                         color="primary"
+                                                         style={{
+                                                             textTransform: 'none',
+                                                             width: '12rem',
+                                                             margin: '.5rem 0'
+                                                         }}
                                         >
                                             Xem thêm
                                         </Button>) : (<Button variant="outlined"
-                                                              onClick={()=> setShow(true)}
+                                                              onClick={() => setShow(true)}
                                                               color="primary"
-                                                              style={{textTransform: 'none', width: '12rem', margin: '.5rem 0'}}
+                                                              style={{
+                                                                  textTransform: 'none',
+                                                                  width: '12rem',
+                                                                  margin: '.5rem 0'
+                                                              }}
                                         >
                                             Thu gọn
                                         </Button>)}
@@ -279,6 +316,93 @@ function ProductDetail() {
                             </Card>
                         </Grid>
                     </Grid>
+                    <Grid container style={{marginTop: '1rem'}}>
+                        <Grid item xs={12}>
+                            <Card>
+                                <CardContent>
+                                    <form style={{width: '90%', margin: '0 auto'}}>
+                                        <FormControlLabel
+                                            style={{margin: '0 1rem'}}
+                                            control={
+                                                <>
+                                                    <input
+                                                        name="rating"
+                                                        type="number"
+                                                        value={review.rating}
+                                                        hidden
+                                                        readOnly
+                                                    />
+                                                    <Rating
+                                                        value={review.rating}
+                                                        onChange={(_, value) => setReview(prevState => ({
+                                                            ...prevState, rating: value
+                                                        }))}
+                                                        name="rating"
+                                                        icon={<StarBorderIcon fontSize="inherit"/>}
+                                                        precision={1}
+                                                    />
+                                                </>
+                                            }
+                                        />
+
+                                        <TextField
+                                            variant="outlined"
+                                            margin="normal"
+                                            fullWidth
+                                            value={review.comment}
+                                            onChange={(e) => setReview(prevState => ({
+                                                ...prevState,
+                                                comment: e.target.value
+                                            }))}
+                                            id="title"
+                                            label="Bình luận"
+                                            name="title"
+                                            autoFocus
+                                        />
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={handleSubmitComment}
+                                            style={{textTransform: 'none'}}
+                                        >
+                                            Thêm
+                                        </Button>
+                                    </form>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    </Grid>
+                    <Card>
+                        <AppBar  position="static" elevation={0}>
+                            <Toolbar>
+                                <Typography color="inherit" variant="h4">
+                                    Bình luận đánh giá sản phẩm
+                                </Typography>
+                            </Toolbar>
+                        </AppBar>
+                        <CardContent>
+                            {dataRv.map(e => (
+                                <div key={e.idbldg}>
+                                    <Grid container style={{marginTop: '1rem'}}>
+                                        <Grid item xs={2}>
+                                            <Typography variant="h6" color="primary">{`${e.ho||' '} ${e.ten || '' }`}</Typography>
+                                            <Typography color="primary">{formatDateTime(e.thoi_gian)}</Typography>
+                                        </Grid>
+                                        <Grid item xs={10}>
+                                            <Rating
+                                                value={e.danhgia}
+                                                name="ratingg"
+                                                icon={<StarBorderIcon fontSize="inherit"/>}
+                                            />
+                                            <Typography style={{textAlign: 'justify'}}>
+                                                {e.binhluan}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                </div>
+                            ))}
+                        </CardContent>
+                    </Card>
                 </Paper>
             </Box>
             <Dialog fullWidth maxWidth="md" open={open} onClose={handleClose} TransitionComponent={Transition}>

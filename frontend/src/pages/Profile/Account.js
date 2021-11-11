@@ -90,6 +90,11 @@ function Account() {
             <Button variant="contained" color="primary" style={{textTransform: 'none'}}
                     onClick={() => {
                         handleClickOpen();
+                        form.reset({
+                            firstname: profile.ten,
+                            lastname: profile.ho,
+                            phone: profile.sdt
+                        })
                     }}>Cập nhật thông tin</Button>
             <Divider style={{margin: '1rem 0'}}/>
             <div style={{marginBottom: '1rem'}}>

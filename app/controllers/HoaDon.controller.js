@@ -2,10 +2,7 @@ const HoaDon = require('../models/HoaDon.model');
 const CTHD = require('../models/ChiTietHoaDon.model');
 
 exports.create = (req, res)=>{
-    const d = new Date();
-    const idhd = 'HD'+d.getTime();
     const hoadon = new HoaDon({
-        idhd: idhd,
         email_paypal: req.body.emailPayPal,
         tong_gia: req.body.tong_gia,
         idtk: req.body.idtk,
@@ -21,27 +18,27 @@ exports.create = (req, res)=>{
         }
         else{
             let check = true;
-            let i =1;
-            req.body.sach.map((value, index)=>{
-                let d1 = new Date();
-                let id_cthd = 'CTHD'+d1.getTime()+index;
-                const cthd = new CTHD({
-                    id_cthd: id_cthd,
-                    idhd: idhd,
-                    idsach: value.idsach,
-                    so_luong: value.so_luong,
-                    gia: value.gia_sach,
-                    phan_tram: value.phan_tram ? value.phan_tram : 0
+            HoaDon.getIdDesc((_, idhd)=>{
+                req.body.sach.map((value, index)=>{
+                    const cthd = new CTHD({
+                        idhd: idhd.idhd,
+                        idsach: value.idsach,
+                        so_luong: value.so_luong,
+                        gia: value.gia_sach,
+                        phan_tram: value.phan_tram ? value.phan_tram : 0
+                    });
+
+                    CTHD.create(cthd, (err, _)=>{
+                        if(err){
+                            console.log(err)
+                            return check = false;
+                        }
+                    })
+
                 });
 
-                CTHD.create(cthd, (err, _)=>{
-                   if(err){
-                       console.log(err)
-                     return check = false;
-                   }
-                })
-
             });
+
 
             if(check){
               return res.status(200).send({ message: `thanh cong` });

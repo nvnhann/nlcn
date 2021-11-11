@@ -32,6 +32,8 @@ require("./app/routers/DiaChi.router")(app);
 require("./app/routers/Sach.router")(app);
 require("./app/routers/KhuyenMai.router")(app);
 require("./app/routers/HoaDon.router")(app);
+require("./app/routers/Review.router")(app);
+
 const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {

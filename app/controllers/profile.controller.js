@@ -1,5 +1,4 @@
 const Profile = require('../models/profile.model');
-const User = require("../models/user.model");
 
 exports.create = (req, res) =>{
     if (!req.body) {
@@ -9,9 +8,9 @@ exports.create = (req, res) =>{
     }
 
     const profile = new Profile({
-        lastname: req.body.lastname,
-        firstname: req.body.firstname,
-        phone: req.body.phone,
+        ho: req.body.lastname,
+        ten: req.body.firstname,
+        sdt: req.body.phone,
         idtk: req.idtk
     });
 
@@ -48,21 +47,24 @@ exports.updateEmail = (req, res)=>{
 
 exports.update= (req, res)=>{
     const profile = new Profile({
-        lastname: req.body.lastname,
-        firstname: req.body.firstname,
-        phone: req.body.phone,
+        ho: req.body.lastname,
+        ten: req.body.firstname,
+        sdt: req.body.phone,
+        idtk: req.idtk
     });
     Profile.update(req.idtk, profile, (err, _)=>{
         if (err) {
-            if (err.kind === "not_found")
-                return res
-                    .status(404)
-                    .send({ message: "Not found profile with id" + req.params.idtg });
-            else
-                return res.status(500).send({
-                    message: "Could not update profile with id " + req.params.idtg,
+            if (err.kind === "not_found") {
+                Profile.create(profile, (err,rs)=>{
+                    if(err){
+                        return res.status(500).send({
+                            message: err
+                        });
+                    }
+                    return res.send({rs})
                 });
+            }
         }
-        res.send({ message: "profile was updated successfully!" });
+       return res.send({ message: "profile was updated successfully!" });
     })
 }

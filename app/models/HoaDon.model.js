@@ -1,7 +1,6 @@
 const sql = require('./db');
 
 const HoaDon = function (hoadon){
-    this.idhd = hoadon.idhd;
     this.email_paypal = hoadon.email_paypal;
     this.tong_gia = hoadon.tong_gia;
     this.idtk = hoadon.idtk;
@@ -16,6 +15,13 @@ HoaDon.create = (newHoaDon, rs)=>{
         rs(null, data);
     })
 };
+
+HoaDon.getIdDesc = (rs)=>{
+    sql.query("SELECT idhd FROM hoa_don ORDER BY idhd DESC LIMIT 1;", (err, data)=>{
+        if(err) return rs(err, null);
+        rs(null, data[0]);
+    })
+}
 
 HoaDon.getById=(idtk, rs)=>{
     sql.query("SELECT * FROM hoa_don WHERE idtk = ?", idtk, (err,data)=>{

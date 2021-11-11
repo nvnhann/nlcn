@@ -1,9 +1,9 @@
 const sql = require("./db");
 
 const Profile = function (profile) {
-    this.lastname = profile.lastname;
-    this.firstname = profile.firstname;
-    this.phone = profile.phone;
+    this.ho = profile.ho;
+    this.ten = profile.ten;
+    this.sdt = profile.sdt;
     this.idtk = profile.idtk;
 };
 
@@ -11,13 +11,13 @@ Profile.create = (newProfile, rs) => {
     sql.query(
         "INSERT INTO `thong_tin_tk` (`ho`, `ten`, `sdt`, `idtk`) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE `ho` = ?, `ten` = ?, `sdt`= ?",
         [
-            newProfile.lastname,
-            newProfile.firstname,
-            newProfile.phone,
+            newProfile.ho,
+            newProfile.ten,
+            newProfile.sdt,
             newProfile.idtk,
-            newProfile.lastname,
-            newProfile.firstname,
-            newProfile.phone,
+            newProfile.ho,
+            newProfile.ten,
+            newProfile.sdt,
         ],
         (err, _) => {
             if (err) {
@@ -32,10 +32,9 @@ Profile.create = (newProfile, rs) => {
 
 Profile.get = (idtk, rs) => {
     sql.query(
-        `SELECT tt.ho, tt.ten, tt.sdt, dc.diachi, tong_don.so_hd, tg.tong_gia
-from (SELECT COUNT(idhd) as so_hd, idtk  FROM hoa_don  WHERE trang_thai = 2 ) as tong_don,
-(SELECT sum(tong_gia) as tong_gia, idtk  FROM hoa_don WHERE trang_thai = 2) as tg,
-thong_tin_tk tt LEFT JOIN dia_chi dc ON tt.idtk=dc.idtk WHERE dc.mac_dinh=1 AND tt.idtk = tong_don.idtk and tg.idtk = tt.idtk AND tt.idtk= '${idtk}'`,
+        `SELECT tt.ho, tt.ten, tt.sdt, dc.diachi FROM
+thong_tin_tk tt LEFT JOIN dia_chi dc ON tt.idtk=dc.idtk WHERE tt.idtk='${idtk}'
+ORDER BY dc.mac_dinh DESC LIMIT 1`,
         (err, res) => {
             if (err) {
                 console.log(err);
@@ -64,7 +63,7 @@ Profile.updateEmail = (email, idtk, res) => {
 
 Profile.update = (idtk, profile, rs) => {
     sql.query("UPDATE `thong_tin_tk` SET `ho` = ?, `ten` = ?, `sdt` = ? WHERE `thong_tin_tk`.`idtk` = ?",
-        [profile.lastname, profile.firstname, profile.phone, idtk], (err, data) => {
+        [profile.ho, profile.ten, profile.sdt, idtk], (err, data) => {
             if (err) return rs(err, null);
             if (data.affectedRows === 0) return rs({kind: "not_found"}, null);
             rs(null, data);
