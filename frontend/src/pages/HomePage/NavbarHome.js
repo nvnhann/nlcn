@@ -25,7 +25,7 @@ import Login from '../../Component/Authentication/Login';
 import Register from '../../Component/Authentication/Register';
 import Searchbar from '../../Component/Searchbar';
 import { cartItemCount } from '../../Store/selecters';
-import { Link as RouterLink } from 'react-router-dom';
+import {Link as RouterLink, useNavigate} from 'react-router-dom';
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -63,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
 export default function NavbarHome({ onOpenSidebar }) {
   const theme = useTheme();
   const classes = useStyles();
+  const navigate = useNavigate();
   const cartcount = useSelector(cartItemCount);
   const [mode, setMode] = useState(MODE.LOGIN);
   const [open, setOpen] = useState(false);
@@ -140,6 +141,15 @@ export default function NavbarHome({ onOpenSidebar }) {
                   Bạn chưa có tài khoản? Đăng ký
                 </Button>
               </Box>
+              <Box textAlign="center">
+                <Button style={{ textTransform: 'none' }} onClick={()=>{
+                    handleClose();
+                    navigate('/forgetpwd');
+
+                }}>
+                  Quên mật khẩu
+                </Button>
+              </Box>
             </>
           )}
 
@@ -151,6 +161,8 @@ export default function NavbarHome({ onOpenSidebar }) {
                   Bạn đã có tài khoản? Đăng nhập
                 </Button>
               </Box>
+
+
             </>
           )}
         </DialogContent>

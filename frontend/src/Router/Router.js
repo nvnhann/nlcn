@@ -18,6 +18,8 @@ import Profile from '../pages/Profile';
 import ShopCart from '../pages/ShopCart';
 import Sale from "../pages/Sale";
 import HoaDonAdmin from "../pages/HoaDonAdmin";
+import ChangePwd from "../pages/Profile/ChangePWD";
+import ForgetPwd from "../pages/ForgetPwd";
 export default function Router() {
   const isAdmin = useSelector((state) => state.user.current.role) === 'ADMIN';
   const isLogin = !!useSelector((state) => state.user.current.id);
@@ -46,6 +48,10 @@ export default function Router() {
           path: '/shopcart',
           element: <ShopCart />,
         },
+        {
+          path: 'forgetpwd',
+          element: <ForgetPwd />
+        }
       ],
     },
     {
@@ -95,6 +101,10 @@ export default function Router() {
         {
           path: 'hoadon',
           element: <HoaDonAdmin />
+        },
+        {
+          path: 'changepwd',
+          element: <ChangePwd />
         }
       ],
     },

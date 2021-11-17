@@ -65,4 +65,23 @@ User.getAll = (rs) => {
     })
 }
 
+User.changPwd = (idtk,pwd, result) =>{
+    sql.query("UPDATE tai_khoan SET mat_khau = ? WHERE idtk = ? ", [bcrypt.hashSync(pwd), idtk], (err, res)=>{
+        if (err) {
+           return result(err, null);
+        }
+        result(null, res);
+    })
+}
+
+User.changPwdByEmail = (email,pwd, result) =>{
+    sql.query("UPDATE tai_khoan SET mat_khau = ? WHERE email = ? ", [bcrypt.hashSync(pwd), email], (err, res)=>{
+        if (err) {
+            return result(err, null);
+        }
+        result(null, res);
+    })
+}
+
+
 module.exports = User;

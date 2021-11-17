@@ -17,7 +17,6 @@ export default function LoginForm(props) {
     const { onSubmit } = props;
     if (onSubmit) {
       await onSubmit(value);
-      form.reset();
     }
   };
 

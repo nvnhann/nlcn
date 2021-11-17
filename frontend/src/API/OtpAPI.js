@@ -8,7 +8,11 @@ const OtpAPI = {
     post(data){
         const url = "/email/verifyemail";
         return axiosClient.post(url,data);
-    }
+    },
+    getOtpForget(data){
+        const url = "/email/otpforget";
+        return axiosClient.post(url, data);
+    },
 }
 
 export default OtpAPI;

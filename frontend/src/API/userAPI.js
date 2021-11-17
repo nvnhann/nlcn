@@ -12,6 +12,14 @@ const userAPI = {
     getAll(){
         const url = '/api/user/getall';
         return axiosClient.get(url);
+    },
+    changePwd(data){
+        const url = '/api/user/changepwd';
+        return axiosClient.post(url, data)
+    },
+    changePwdByEmail(data){
+        const url = '/api/user/forgetpwd';
+        return axiosClient.post(url, data)
     }
 
 }

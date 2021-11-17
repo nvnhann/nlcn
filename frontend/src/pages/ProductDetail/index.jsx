@@ -317,7 +317,7 @@ function ProductDetail() {
                         </Grid>
                     </Grid>
                     <Grid container style={{marginTop: '1rem'}}>
-                        <Grid item xs={12}>
+                        {isLogin ? ( <Grid item xs={12}>
                             <Card>
                                 <CardContent>
                                     <form style={{width: '90%', margin: '0 auto'}}>
@@ -370,7 +370,7 @@ function ProductDetail() {
                                     </form>
                                 </CardContent>
                             </Card>
-                        </Grid>
+                        </Grid>) : (<Typography color="primary" variant="h5" style={{margin: '1rem'}}>Đăng nhập để bình luân - đánh giá</Typography>  )}
                     </Grid>
                     <Card>
                         <AppBar  position="static" elevation={0}>

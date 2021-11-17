@@ -60,6 +60,7 @@ const SideBarConfig = [
     path: '/dashboard/kichthuot',
     icon: getIcon('mdi:resize', color),
   },
+
 ];
 
 export default SideBarConfig;

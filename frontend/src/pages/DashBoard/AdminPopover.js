@@ -11,7 +11,7 @@ const MENU_OPTIONS = [
     label: 'Đổi mật khẩu',
     icon: 'mdi:key-change',
     color: '#6b7280',
-    linkTo: '/profile',
+    linkTo: '/dashboard/changepwd',
   },
 ];
 
