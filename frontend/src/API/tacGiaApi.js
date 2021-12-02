@@ -1,9 +1,9 @@
 import axiosClient from './axiosClient';
 
 const tacGiaApi = {
-  get() {
+  get(p) {
     const url = '/api/tacgia';
-    return axiosClient.get(url);
+    return axiosClient.get(url, {params: p});
   },
   create(data) {
     const url = '/api/tacgia';

@@ -16,7 +16,7 @@ exports.create = (req, res) => {
 };
 
 exports.getAll = (req, res) => {
-  TacGia.getAll((err, data) => {
+  TacGia.getAll(req.query,(err, data) => {
     if (err) {
       console.log(err);
       return res.status(500).send({ message: err });

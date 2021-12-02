@@ -136,7 +136,7 @@ function ProductDetail() {
                                 <Grid item xs={6}>
                                     <Button
                                         variant="outlined"
-                                        style={{textTransform: 'none'}}
+                                        style={{textTransform: 'none', width: '80%'}}
                                         startIcon={<Icon icon="emojione-monotone:shopping-cart"/>}
                                         onClick={() => {
                                             addCart();
@@ -149,7 +149,7 @@ function ProductDetail() {
                                     <Button
                                         variant="contained"
                                         color="primary"
-                                        style={{textTransform: 'none', width: '12rem'}}
+                                        style={{textTransform: 'none', width: '80%'}}
                                         onClick={checkout}
                                     >
                                         Mua ngay
@@ -287,7 +287,7 @@ function ProductDetail() {
                                     </Grid>
                                     <Divider style={{margin: '1rem 0'}}/>
                                     <Typography component="div" style={{whiteSpace: 'pre-line'}}>
-                                        {show ? shortString(sach.mo_ta) : sach.mo_ta}
+                                        {show ? shortString(sach.mo_ta) + ' ...' : sach.mo_ta}
                                     </Typography>
                                     <Box textAlign="center">
                                         {show ? (<Button variant="outlined"

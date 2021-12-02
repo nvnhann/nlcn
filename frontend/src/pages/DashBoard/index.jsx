@@ -35,7 +35,6 @@ export default function DashBoard() {
       </Helmet>
       <DashBoardNavbar onOpenSidebar={() => setOpen(true)} />
       <DashBoardSideBar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
-
       <MainStyle>
         <Outlet />
       </MainStyle>

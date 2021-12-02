@@ -19,8 +19,22 @@ TacGia.create = (newTacgia, rs) => {
     );
 };
 
-TacGia.getAll = (rs) => {
-    sql.query('SELECT * FROM tac_gia;', (err, data) => {
+TacGia.getAll = (q, rs) => {
+
+    const start = (q.page - 1) * 8;
+    const end = q.page * 8;
+    let qr = "SELECT tac_gia.*, (SELECT COUNT(idtg) FROM `tac_gia`) as so_luong FROM `tac_gia`";
+    if(q.hotentg === "DESC"){
+        qr += "ORDER BY hotentg "+q.hotentg;
+    }
+
+    else{
+        qr += "ORDER BY SUBSTRING(idtg,4) * 1 "+q.idtg;
+    }
+
+    qr += " LIMIT " + start + "," + end + "";
+    console.log(qr)
+    sql.query(qr, (err, data) => {
         if (err) {
             console.log(err);
             return rs(err, null);
