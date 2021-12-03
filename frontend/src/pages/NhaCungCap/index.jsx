@@ -10,15 +10,16 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
+  DialogActions, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Grid,
 } from '@material-ui/core';
 import { Icon } from '@iconify/react';
-import { DataGrid } from '@mui/x-data-grid';
-import { escapeRegExp } from '../../ultils/escapRegExp';
 import { useForm } from 'react-hook-form';
 import InputText from '../../Component/Form-control/InputText';
 import { useSnackbar } from 'notistack';
 import NhaCungCapAPI from '../../API/NhaCungCapAPI';
+import XLSX from 'xlsx';
+import {Pagination} from "@material-ui/lab";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -27,18 +28,36 @@ function NhaCungCap() {
   const [data, setData] = useState([]);
   const [idncc, setIdncc] = useState('');
   const [filterData, setFilterData] = useState(data);
-  const [searchText, setSearchText] = useState('');
   const [open, setOpen] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [count, setCount] = useState(0);
   const [tenncc, setTenncc] = useState('');
   const { enqueueSnackbar } = useSnackbar();
+  const [filter, setFilter] = useState({idncc: 'ASC', tenncc: '', search: ''});
+  const [page, setPage] = React.useState(1);
+
+  const handlePage = (event, value) => {
+    setPage(value);
+  };
+  const ExportExcel = async () =>{
+    const res = await NhaCungCapAPI.getXLSX();
+    /// console.log(res)
+    const workSheet = XLSX.utils.json_to_sheet(res);
+    const workBook = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(workBook, workSheet, "NhaCungCap");
+    XLSX.write(workBook, {bookType: "xlsx", type: "buffer"});
+    XLSX.write(workBook, {bookType: "xlsx", type: "binary"});
+    XLSX.writeFile(workBook, "NhaCungCap.xlsx")
+
+  }
 
   const form = useForm({
     defaultValues: {
       tenncc: '',
       diachi: '',
+      sdt: ''
     },
   });
 
@@ -46,6 +65,7 @@ function NhaCungCap() {
     defaultValues: {
       tenncc: '',
       diachi: '',
+      sdt: ''
     },
   });
 
@@ -78,11 +98,13 @@ function NhaCungCap() {
 
   useEffect(() => {
     (async () => {
-      const res = await NhaCungCapAPI.get();
+      const f = filter;
+      f.page = page;
+      const res = await NhaCungCapAPI.get(f);
       setData(res);
       setFilterData(res);
     })();
-  }, [count]);
+  }, [count, filter.search, filter.idncc, filter.tenncc, page]);
 
   const handleSubmit = async (value) => {
     try {
@@ -119,139 +141,168 @@ function NhaCungCap() {
       enqueueSnackbar(error.message, { variant: 'error', autoHideDuration: 2000 });
     }
   };
-  const requestSearch = (searchValue) => {
-    if (searchValue === '') {
-      setSearchText(searchValue);
-      return setFilterData(data);
-    }
-    setSearchText(searchValue);
-    const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
-    const filteredRows = data.filter((row) => {
-      return Object.keys(row).some((field) => {
-        return searchRegex.test(row[field].toString());
-      });
-    });
-    return setFilterData(filteredRows);
-  };
-
-  const columns = [
-    {
-      field: 'id',
-      headerName: 'ID',
-      width: 200,
-    },
-    {
-      field: 'tenncc',
-      headerName: 'Tên nhà cung cấp',
-      width: 200,
-    },
-
-    {
-      field: 'diachi',
-      headerName: 'Địa chỉ',
-      width: 600,
-    },
-    {
-      field: 'action',
-      headerName: 'Hành động',
-      width: 200,
-      renderCell: (params) => (
-        <>
-          <strong>
-            <Button
-              onClick={() => {
-                handleClickOpenDelete();
-                setTenncc(params.row.tenncc);
-                setIdncc(params.row.id);
-              }}
-              startIcon={<Icon icon="fluent:delete-24-filled" color="#ff4444" />}
-              size="small"
-            >
-              Xóa
-            </Button>
-          </strong>
-
-          <strong>
-            <Button
-              onClick={() => {
-                setTimeout(() => {
-                  formEdit.setValue('tenncc', params.row.tenncc);
-                  formEdit.setValue('diachi', params.row.diachi);
-                }, 10);
-                setIdncc(params.row.id);
-                handleClickOpenEdit();
-              }}
-              startIcon={<Icon icon="eva:edit-2-fill" color="#33b5e5" />}
-              size="small"
-            >
-              Sửa
-            </Button>
-          </strong>
-        </>
-      ),
-    },
-  ];
-
-  const rows = [];
-
-  filterData?.forEach((e) => {
-    rows.push({
-      id: e.idncc,
-      tenncc: e.tenncc,
-      diachi: e.dia_chi,
-      action: e.idncc,
-    });
-  });
 
   return (
     <div>
       <Page title="Nhà cung cấp">
-        <Typography color="primary" variant="h4" gutterBottom>
-          Nhà cung cấp
-        </Typography>
+        <Box >
+          <Box my={2}>
+            <TextField
+                value={filter.search}
+                onChange={(e) =>setFilter(prevState => ({
+                  ...prevState,
+                  search: e.target.value
+                }))}
+                style={{ width: '40ch' }}
+                variant="standard"
+                placeholder="Tìm kiếm ..."
+                InputProps={{
+                  startAdornment: (
+                      <IconButton>
+                        <Icon icon="bi:search" color="#6b7280" />
+                      </IconButton>
+                  ),
+                  endAdornment: (
+                      <IconButton
+                          title="Clear"
+                          aria-label="Clear"
+                          size="small"
+                          style={{ visibility: filter.search ? 'visible' : 'hidden' }}
+                          onClick={() => setFilter(prevState => ({
+                            ...prevState,
+                            search: ''
+                          }))}
+                      >
+                        <Icon icon="ic:outline-clear" color="#6b7280" />
+                      </IconButton>
+                  ),
+                }}
+            />
+            <Button
+                onClick={handleClickOpen}
+                variant="contained"
+                style={{ textTransform: 'none', marginLeft: '1rem' }}
+                color="primary"
+                startIcon={<Icon icon="bi:plus-square-fill" color="#ffffff" />}
+            >
+              Thêm nhà cung cấp
+            </Button>
+          </Box>
+          <TableContainer style={{height: '37rem'}}>
+            <Table>
+              <TableHead style={{backgroundColor: '#6b7280'}}>
+                <TableRow>
+                  <TableCell align="center" style={{color: '#fff'}}>
+                    ID Nhà cung cấp
+                    {filter.idncc === 'DESC' ? (<IconButton onClick={() => {
+                      setFilter(prevState => ({
+                        ...prevState, tenncc: '', idncc: 'ASC'
+                      }))
+                    }}>
+                      <Icon icon="akar-icons:arrow-down" color="#fff"/>
+                    </IconButton>) : (<IconButton
+                        onClick={() => {
+                          setFilter(prevState => ({
+                            ...prevState, tenncc: '', idncc: 'DESC'
+                          }))
+                        }}
+                    >
+                      <Icon icon="akar-icons:arrow-up" color="#fff"/>
+                    </IconButton>)}
 
-        <Box my={2}>
-          <TextField
-            value={searchText}
-            onChange={(e) => requestSearch(e.target.value)}
-            style={{ width: '40ch' }}
-            variant="standard"
-            placeholder="Tìm kiếm ..."
-            InputProps={{
-              startAdornment: (
-                <IconButton>
-                  <Icon icon="bi:search" color="#6b7280" />
-                </IconButton>
-              ),
-              endAdornment: (
-                <IconButton
-                  title="Clear"
-                  aria-label="Clear"
-                  size="small"
-                  style={{ visibility: searchText ? 'visible' : 'hidden' }}
-                  onClick={() => requestSearch('')}
-                >
-                  <Icon icon="ic:outline-clear" color="#6b7280" />
-                </IconButton>
-              ),
-            }}
-          />
-          <Button
-            onClick={handleClickOpen}
-            variant="contained"
-            style={{ textTransform: 'none', marginLeft: '1rem' }}
-            color="primary"
-            startIcon={<Icon icon="bi:plus-square-fill" color="#ffffff" />}
-          >
-            Thêm nhà cung cấp
-          </Button>
-        </Box>
-        <Box>
-          <div style={{ height: 390, width: '100%' }}>
-            <div style={{ height: 390, width: '100%' }}>
-              <DataGrid rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]} />
-            </div>
-          </div>
+                  </TableCell>
+                  <TableCell align="center" style={{color: '#fff'}}>
+                    Họ và tên
+                    {filter.tenncc === 'DESC' ? (<IconButton onClick={() => {
+                      setFilter(prevState => ({
+                        ...prevState, tenncc: 'ASC'
+                      }))
+                    }}>
+                      <Icon icon="akar-icons:arrow-down" color="#fff"/>
+                    </IconButton>) : (<IconButton
+                        onClick={() => {
+                          setFilter(prevState => ({
+                            ...prevState, tenncc: 'DESC'
+                          }))
+
+                        }}
+                    >
+                      <Icon icon="akar-icons:arrow-up" color="#fff"/>
+                    </IconButton>)}
+                  </TableCell>
+                  <TableCell align="center" style={{color: '#fff'}}>
+                    Số điện thoại
+                  </TableCell>
+                  <TableCell align="center" style={{color: '#fff'}}>
+                    Địa chỉ
+                  </TableCell>
+
+                  <TableCell align="center" style={{color: '#fff'}}>
+                    Hành động
+                  </TableCell>
+
+                </TableRow>
+              </TableHead>
+              {/*table body*/}
+              <TableBody>
+                {filterData?.map(e => (<TableRow key={e.idncc}>
+                  <TableCell align="center">{e.idncc} </TableCell>
+                  <TableCell>{e.tenncc}</TableCell>
+                  <TableCell>{e.sdt}</TableCell>
+                  <TableCell>{e.dia_chi}</TableCell>
+                  <TableCell align="center">
+                    <Button
+                        onClick={() => {
+                          handleClickOpenDelete();
+                          setTenncc(e.tenncc);
+                          setIdncc(e.idncc);
+                        }}
+                        startIcon={<Icon icon="fluent:delete-24-filled" color="#ff4444"/>}
+                        size="small"
+                        style={{textTransform: 'none'}}
+                    >
+                      Xóa
+                    </Button>
+
+                    <Button
+                        onClick={() => {
+                          setTimeout(() => {
+                            formEdit.setValue('tenncc', e.tenncc);
+                            formEdit.setValue('diachi', e.dia_chi);
+                            formEdit.setValue('sdt', e.sdt);
+                          }, 10);
+                          setIdncc(e.idncc);
+                          handleClickOpenEdit();
+                        }}
+                        startIcon={<Icon icon="eva:edit-2-fill" color="#33b5e5"/>}
+                        size="small"
+                    >
+                      Sửa
+                    </Button>
+
+                  </TableCell>
+                </TableRow>))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Grid container style={{margin: '1rem 0', position: "relative"}}>
+            <Grid item xs={9}>
+              <Pagination size="small" count={Math.ceil(filterData[0]?.so_luong / 8)} color="primary"
+                          page={page} onChange={handlePage}/>
+
+            </Grid>
+            <Grid item xs={3}>
+              <Button
+                  onClick={ExportExcel}
+                  variant="contained"
+                  style={{position: 'absolute', textTransform: 'none', right: 0}}
+                  color="primary"
+                  startIcon={<Icon icon="entypo:download" color="#ffffff"/>}
+              >
+                Tải về
+              </Button>
+            </Grid>
+          </Grid>
         </Box>
       </Page>
       <Dialog
@@ -278,6 +329,7 @@ function NhaCungCap() {
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <DialogContent>
             <InputText fullWidth label="Tên nhà cung cấp" name="tenncc" form={form} />
+            <InputText fullWidth label="Số điện thoại" name="sdt" form={form} />
             <InputText fullWidth label="Địa chỉ" form={form} name="diachi" />
           </DialogContent>
           <DialogActions>
@@ -319,6 +371,7 @@ function NhaCungCap() {
         <form onSubmit={formEdit.handleSubmit(handleSubmitEdit)}>
           <DialogContent>
             <InputText fullWidth label="Tên nhà cung cấp" name="tenncc" form={formEdit} />
+            <InputText fullWidth label="số điện thoại" name="sdt" form={formEdit} />
             <InputText fullWidth label="Địa chỉ" form={formEdit} name="diachi" />
           </DialogContent>
           <DialogActions>

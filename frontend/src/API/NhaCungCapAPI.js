@@ -1,8 +1,12 @@
 import axiosClient from './axiosClient';
 
 const NhaCungCapAPI = {
-  get() {
+  get(p) {
     const url = '/api/nhacungcap';
+    return axiosClient.get(url, {params: p});
+  },
+  getXLSX() {
+    const url = '/api/nccxlsx';
     return axiosClient.get(url);
   },
   create(data) {

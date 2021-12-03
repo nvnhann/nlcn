@@ -1,8 +1,12 @@
 import axiosClient from './axiosClient';
 
 const NhaXuatBanAPI = {
-  get() {
+  get(p) {
     const url = '/api/nhaxuatban';
+    return axiosClient.get(url, {params: p});
+  },
+  getExcel(){
+    const url = '/api/nxbxlsx';
     return axiosClient.get(url);
   },
   create(data) {

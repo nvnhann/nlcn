@@ -57,8 +57,27 @@ User.findPwd = (idtk, res) => {
     })
 }
 
-User.getAll = (rs) => {
-    sql.query("SELECT tk.idtk as id, tk.email, tttk.ho, tttk.ten, tttk.sdt, dc.diachi from tai_khoan as tk LEFT JOIN thong_tin_tk AS tttk ON tk.idtk = tttk.idtk LEFT JOIN dia_chi as dc ON dc.idtk = tk.idtk WHERE (dc.mac_dinh IS null or dc.mac_dinh = 1) and tk.quyen <> 'ADMIN';", (err,data)=>{
+User.getAll = (q, rs) => {
+
+    const start = (q.page - 1) * 8;
+    const end = q.page * 8;
+    let qr = "";
+    if(q.search) {
+        qr = "SELECT tk.idtk, tk.email, tttk.hoten, tttk.sdt, (SELECT COUNT(tk.idtk) from tai_khoan as tk LEFT JOIN thong_tin_tk AS tttk ON tk.idtk = tttk.idtk WHERE tk.quyen <> 'ADMIN' AND tk.idtk LIKE '%" + q.search + "%' OR tttk.hoten LIKE '%" + q.search + "%') as so_luong from tai_khoan as tk LEFT JOIN thong_tin_tk AS tttk ON tk.idtk = tttk.idtk WHERE tk.quyen <> 'ADMIN' AND tk.idtk LIKE '%" + q.search + "%' OR tttk.hoten LIKE '%" + q.search + "%'"
+    }
+    else qr = "SELECT tk.idtk, tk.email, tttk.hoten, tttk.sdt, (SELECT COUNT(idtk) from tai_khoan WHERE quyen <> 'ADMIN') as so_luong from tai_khoan as tk LEFT JOIN thong_tin_tk AS tttk ON tk.idtk = tttk.idtk WHERE tk.quyen <> 'ADMIN' ";
+
+    if(q.hoten){
+        qr += "ORDER BY tttk.hoten "+q.hoten;
+    }
+
+    else{
+        qr += "ORDER BY SUBSTRING(tk.idtk,6) * 1 "+q.idtk;
+    }
+
+    qr += " LIMIT " + start + "," + end + "";
+    console.log(qr)
+    sql.query(qr, (err,data)=>{
         if (err) return rs(err, null);
         rs(null,data)
 
@@ -81,6 +100,14 @@ User.changPwdByEmail = (email,pwd, result) =>{
         }
         result(null, res);
     })
+}
+
+User.delete =(idtk, result) =>{
+    sql.query("DELETE FROM tai_khoan WHERE idtk = ? ", idtk, (err, res) => {
+        if (err) return result(err, null);
+        if (res.affectedRows == 0) return result({ kind: "not_found" }, null);
+        result(null, res);
+    });
 }
 
 

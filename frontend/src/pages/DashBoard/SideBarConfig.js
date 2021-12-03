@@ -11,11 +11,6 @@ const SideBarConfig = [
     icon: getIcon('majesticons:user-group', color),
   },
   {
-    title: 'Tác giả',
-    path: '/dashboard/tacgia',
-    icon: getIcon('carbon:user-filled', color),
-  },
-  {
     title: 'Sách',
     path: '/dashboard/book',
     icon: getIcon('dashicons:book-alt', color),
@@ -29,6 +24,11 @@ const SideBarConfig = [
     title: 'Khuyến mãi',
     path: '/dashboard/sale',
     icon: getIcon('whh:sale', color),
+  },
+  {
+    title: 'Tác giả',
+    path: '/dashboard/tacgia',
+    icon: getIcon('carbon:user-filled', color),
   },
   {
     title: 'Nhà cung cấp',

@@ -25,6 +25,16 @@ exports.getAll = (req, res) => {
   });
 };
 
+exports.getExcel = (req, res) => {
+  TacGia.getExcel((err, data) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).send({ message: err });
+    }
+    res.send(data);
+  });
+};
+
 exports.delete = (req, res) => {
   TacGia.delete(req.params.idtg, (err, _) => {
     if (err) {

@@ -9,9 +9,9 @@ const userAPI = {
         const url = '/api/user/login';
         return axiosClient.post(url, data);
     },
-    getAll(){
+    getAll(f){
         const url = '/api/user/getall';
-        return axiosClient.get(url);
+        return axiosClient.get(url, {params: f});
     },
     changePwd(data){
         const url = '/api/user/changepwd';
@@ -20,6 +20,10 @@ const userAPI = {
     changePwdByEmail(data){
         const url = '/api/user/forgetpwd';
         return axiosClient.post(url, data)
+    },
+    delete(idtk){
+        const url = `/api/user/${idtk}`;
+        return axiosClient.delete(url)
     }
 
 }

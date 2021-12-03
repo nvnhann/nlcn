@@ -4,6 +4,7 @@ exports.create = (req, res) => {
   const nhacungcap = new NhaCungCap({
     tenncc: req.body.tenncc,
     dia_chi: req.body.diachi,
+    sdt: req.body.sdt
   });
 
   NhaCungCap.create(nhacungcap, (err, data) => {
@@ -18,7 +19,17 @@ exports.create = (req, res) => {
 };
 
 exports.getAll = (req, res) => {
-  NhaCungCap.getAll((err, data) => {
+  NhaCungCap.getAll(req.query,(err, data) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).send({ message: err });
+    }
+    res.send(data);
+  });
+};
+
+exports.getExcel = (req, res) => {
+  NhaCungCap.getExcel((err, data) => {
     if (err) {
       console.log(err);
       return res.status(500).send({ message: err });
@@ -48,6 +59,7 @@ exports.update = (req, res) => {
   const nhacungcap = new NhaCungCap({
     tenncc: req.body.tenncc,
     dia_chi: req.body.diachi,
+    sdt: req.body.sdt
   });
   NhaCungCap.update(req.params.idncc, nhacungcap, (err, _) => {
     if (err) {

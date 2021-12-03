@@ -53,7 +53,7 @@ Sach.create = (newSach, rs) => {
 
 Sach.getAll = (rs) => {
   sql.query(
-    "SELECT s.idsach,s.gia_sach, s.tensach, s.hinhanh, s.mo_ta, s.so_luong, s.hinh_thuc_bia, s.trong_luong, s.so_trang, s.idtg, s.idnn, s.idnxb, s.idkt, s.idncc,s.idtl, t.hotentg, n.ngon_ngu, kt.kt_ngang, kt.kt_doc , nxb.tennxb, ncc.tenncc, tl.tentl FROM `sach` s, tac_gia t, ngon_ngu n, nha_xuat_ban nxb, nha_cung_cap ncc, sach_kich_thuoc kt, the_loai tl WHERE s.idtg = t.idtg AND s.idnn = n.idnn AND s.idnxb = nxb.idnxb AND kt.idkt = s.idkt AND ncc.idncc = s.idncc and s.idtl = tl.idtl",
+    "SELECT s.*, t.hotentg, n.ngon_ngu, kt.kt_ngang, kt.kt_doc , nxb.tennxb, ncc.tenncc, tl.tentl FROM `sach` s, tac_gia t, ngon_ngu n, nha_xuat_ban nxb, nha_cung_cap ncc, sach_kich_thuoc kt, the_loai tl WHERE s.idtg = t.idtg AND s.idnn = n.idnn AND s.idnxb = nxb.idnxb AND kt.idkt = s.idkt AND ncc.idncc = s.idncc and s.idtl = tl.idtl",
     (err, data) => {
       if (err) return rs(err, null);
       rs(null, data);

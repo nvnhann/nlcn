@@ -17,8 +17,11 @@
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.4",
     "framer-motion": "^4.1.17",
+    "i": "^0.3.7",
     "js-cookie": "^3.0.1",
+    "json-as-xlsx": "^2.3.0",
     "notistack": "^1.0.10",
+    "npm": "^8.2.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -30,7 +33,9 @@
     "react-router-dom": "^6.0.0-beta.5",
     "react-scripts": "4.0.3",
     "simplebar-react": "^2.3.6",
+    "uninstall": "^0.0.0",
     "web-vitals": "^1.0.1",
+    "xlsx": "^0.17.4",
     "yup": "^0.32.9"
   },
   "scripts": {

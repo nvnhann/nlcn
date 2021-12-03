@@ -12,7 +12,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Slide,
+  Slide, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
   TextField,
   Typography,
 } from '@material-ui/core';
@@ -57,6 +57,7 @@ function Book() {
   const [count, setCount] = useState(0);
   const [idsach, setIdsach] = useState('');
   const [tensach, setTenSach] = useState('');
+  const [filter, setFilter] = useState({idsach: 'ASC', tensach: '', search: ''})
 
   useEffect(() => {
     (async () => {
@@ -105,6 +106,8 @@ function Book() {
     },
     resolver: yupResolver(schema),
   });
+
+
 
   const formEdit = useForm({
     defaultValues: {
@@ -447,11 +450,89 @@ function Book() {
           </Button>
         </Box>
         <Box>
-          <div style={{ height: 390, width: '100%' }}>
-            <div style={{ height: 390, width: '100%' }}>
-              <DataGrid rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]} />
-            </div>
-          </div>
+          <TableContainer style={{height: '37rem'}}>
+            <Table>
+              <TableHead style={{backgroundColor: '#6b7280'}}>
+                <TableRow>
+                  <TableCell align="center" style={{color: '#fff'}}>
+                    ID Sách
+                    {filter.idsach === 'DESC' ? (<IconButton onClick={() => {
+                      setFilter(prevState => ({
+                        ...prevState, tensach: '', idsach: 'ASC'
+                      }))
+                    }}>
+                      <Icon icon="akar-icons:arrow-down" color="#fff"/>
+                    </IconButton>) : (<IconButton
+                        onClick={() => {
+                          setFilter(prevState => ({
+                            ...prevState, tensach: '', idsach: 'DESC'
+                          }))
+                        }}
+                    >
+                      <Icon icon="akar-icons:arrow-up" color="#fff"/>
+                    </IconButton>)}
+
+                  </TableCell>
+                  <TableCell align="center" style={{color: '#fff'}}>
+                    Họ và tên
+                    {filter.hotentg === 'DESC' ? (<IconButton onClick={() => {
+                      setFilter(prevState => ({
+                        ...prevState, hotentg: 'ASC'
+                      }))
+                    }}>
+                      <Icon icon="akar-icons:arrow-down" color="#fff"/>
+                    </IconButton>) : (<IconButton
+                        onClick={() => {
+                          setFilter(prevState => ({
+                            ...prevState, hotentg: 'DESC'
+                          }))
+
+                        }}
+                    >
+                      <Icon icon="akar-icons:arrow-up" color="#fff"/>
+                    </IconButton>)}
+                  </TableCell>
+                  <TableCell align="center" style={{color: '#fff'}}>
+                    Giá
+                  </TableCell>
+                  <TableCell align="center" style={{color: '#fff'}}>
+                    Số lượng
+                  </TableCell>
+                  <TableCell align="center" style={{color: '#fff'}}>
+                    Hành động
+                  </TableCell>
+
+                </TableRow>
+              </TableHead>
+              {/*table body*/}
+              <TableBody>
+                {filterData?.map(e => (<TableRow key={e.idsach}>
+                  <TableCell align="center">{e.idsach} </TableCell>
+                  <TableCell >{e.tensach}</TableCell>
+                  <TableCell align="center">{' $' +e.gia_sach }</TableCell>
+                  <TableCell align="center">{e.so_luong}</TableCell>
+                  <TableCell align="center">
+                    <Button
+                        startIcon={<Icon icon="fluent:delete-24-filled" color="#ff4444"/>}
+                        size="small"
+                        style={{textTransform: 'none'}}
+                    >
+                      Xóa
+                    </Button>
+
+                    <Button
+                        startIcon={<Icon icon="eva:edit-2-fill" color="#33b5e5"/>}
+                        size="small"
+                    >
+                      Sửa
+                    </Button>
+                    <IconButton> <Icon icon="ei:eye"/></IconButton>
+
+                  </TableCell>
+                </TableRow>))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Box>
       </Page>
 

@@ -18,6 +18,7 @@ module.exports = function (app) {
     [authjwt.verifyToken, authjwt.isAdmin],
     nhacungcap.getAll
   );
+  app.get('/api/nccxlsx', [authjwt.verifyToken, authjwt.isAdmin], nhacungcap.getExcel);
   app.delete(
     "/api/nhacungcap/:idncc",
     [authjwt.verifyToken, authjwt.isAdmin],

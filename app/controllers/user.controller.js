@@ -66,7 +66,7 @@ exports.login = (req, res) => {
 }
 
 exports.getAll = (req, res) => {
-    User.getAll((err, data) => {
+    User.getAll(req.query,(err, data) => {
         if (err) {
             console.log(err)
             return res.status(500).send({message: err});
@@ -116,3 +116,19 @@ exports.changPwdByEmail = (req, res) => {
         else res.send({message: `user was change pwd successfully!`});
     })
 }
+exports.delete = (req, res) => {
+    User.delete(req.params.idtk, (err, _) => {
+        if (err) {
+            console.log(err)
+            if (err.kind === "not_found") {
+                return  res.status(404).send({
+                    message: `Not found user with id ${req.params.idtk}.`
+                });
+            } else {
+               return res.status(500).send({
+                    message: "Could not delete user with id " + req.params.idtk
+                });
+            }
+        } else return res.send({ message: `user was deleted successfully!` });
+    });
+};

@@ -1,3 +1,5 @@
+const authjwt = require("../middleware/authJWT");
+const tacgia = require("../controllers/TacGia.controller");
 module.exports = function (app) {
   const tacgia = require('../controllers/TacGia.controller');
   const authjwt = require('../middleware/authJWT');
@@ -7,6 +9,7 @@ module.exports = function (app) {
   });
   app.post('/api/tacgia', [authjwt.verifyToken, authjwt.isAdmin], tacgia.create);
   app.get('/api/tacgia', [authjwt.verifyToken, authjwt.isAdmin], tacgia.getAll);
+  app.get('/api/tgxlsx', [authjwt.verifyToken, authjwt.isAdmin], tacgia.getExcel);
   app.delete('/api/tacgia/:idtg', [authjwt.verifyToken, authjwt.isAdmin], tacgia.delete);
   app.put('/api/tacgia/:idtg', [authjwt.verifyToken, authjwt.isAdmin], tacgia.update);
 };
