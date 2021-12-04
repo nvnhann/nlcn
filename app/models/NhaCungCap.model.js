@@ -25,6 +25,7 @@ NhaCungCap.getAll = (q, rs) => {
     const start = (q.page - 1) * 8;
     const end = q.page * 8;
     let qr = "";
+    const idncc = q.idncc || ' ';
     if(q.search) {
         qr = "SELECT nha_cung_cap.*, (SELECT COUNT(idncc) FROM `nha_cung_cap` WHERE idncc LIKE '%" + q.search + "%' OR tenncc LIKE '%"+q.search+"%' ) as so_luong FROM `nha_cung_cap` WHERE idncc LIKE '%"+q.search+"%' OR tenncc LIKE '%"+q.search+"%'"
     }
@@ -35,10 +36,12 @@ NhaCungCap.getAll = (q, rs) => {
     }
 
     else{
-        qr += "ORDER BY SUBSTRING(idncc,5) * 1 "+q.idncc;
+        qr += "ORDER BY SUBSTRING(idncc,5) * 1 " + idncc || '';
     }
 
-    qr += " LIMIT " + start + "," + end + "";
+    if(q.page){
+        qr += " LIMIT " + start + "," + end + "";
+    }
     console.log(qr)
 
     sql.query(qr, (err, data) => {

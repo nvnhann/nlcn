@@ -51,7 +51,7 @@ exports.getById = (req, res) => {
 };
 
 exports.get = (req, res) => {
-  Sach.get((err, data) => {
+  Sach.get(req.query,(err, data) => {
     if (err) {
       console.log(err);
       return res.status(500).send({ message: err });
@@ -124,3 +124,13 @@ exports.delete = (req, res) => {
     res.send({ message: "sach was deleted successfully!" });
   });
 };
+
+exports.getExcel = (req, res)=>{
+  Sach.getExcel((err, data)=>{
+    if (err) {
+      console.log(err);
+      return res.status(500).send({ message: err});
+    }
+    res.send(data);
+  });
+}

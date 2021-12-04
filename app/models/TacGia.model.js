@@ -22,6 +22,7 @@ TacGia.create = (newTacgia, rs) => {
 TacGia.getAll = (q, rs) => {
     const start = (q.page - 1) * 8;
     const end = q.page * 8;
+    const idtg = q.idtg || '';
     let qr = "";
     if(q.search) {
         qr = "SELECT tac_gia.*, (SELECT COUNT(idtg) FROM `tac_gia` WHERE idtg LIKE '%" + q.search + "%' OR hotentg LIKE '%"+q.search+"%' ) as so_luong FROM `tac_gia` WHERE idtg LIKE '%"+q.search+"%' OR hotentg LIKE '%"+q.search+"%'"
@@ -33,10 +34,13 @@ TacGia.getAll = (q, rs) => {
     }
 
     else{
-        qr += "ORDER BY SUBSTRING(idtg,4) * 1 "+q.idtg;
+        qr += "ORDER BY SUBSTRING(idtg,4) * 1 "+ idtg;
     }
 
-    qr += " LIMIT " + start + "," + end + "";
+   if(q.page){
+       qr += " LIMIT " + start + "," + end + "";
+   }
+
     console.log(qr)
     sql.query(qr, (err, data) => {
         if (err) {

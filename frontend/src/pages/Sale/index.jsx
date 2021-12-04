@@ -12,7 +12,7 @@ import {
     InputLabel,
     MenuItem,
     Select,
-    Slide,
+    Slide, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     TextField,
     Typography
 } from "@material-ui/core";
@@ -40,9 +40,15 @@ function Sale() {
     const [openDelete, setOpenDelete] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [idkm, setIdkm] = useState('');
+    const [filter, setFilter] = useState({idkm: 'ASC', hotentg: '', search: ''})
+    const [page, setPage] = React.useState(1);
 
+    const handlePage = (event, value) => {
+        setPage(value);
+    };
     const currentTime = new Date();
-    currentTime.setHours(currentTime.getHours() + 7);
+    currentTime.setHours(currentTime.getHours() + 8);
+
     const [dataForm, setDataForm] = useState({
         idsach: '',
         ngay_bd_km: currentTime.toISOString().slice(0, 16),
@@ -331,11 +337,122 @@ function Sale() {
                 </Button>
             </Box>
             <Box>
-                <div style={{height: 390, width: '100%'}}>
-                    <div style={{height: 390, width: '100%'}}>
-                        <DataGrid rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]}/>
-                    </div>
-                </div>
+                <TableContainer style={{height: '37rem'}}>
+                    <Table>
+                        <TableHead style={{backgroundColor: '#6b7280'}}>
+                            <TableRow>
+                                <TableCell align="center" style={{color: '#fff'}}>
+                                    ID Khuyến mãi
+                                    {filter.idkm === 'DESC' ? (<IconButton onClick={() => {
+                                        setFilter(prevState => ({
+                                            ...prevState, hotentg: '', idtg: 'ASC'
+                                        }))
+                                    }}>
+                                        <Icon icon="akar-icons:arrow-down" color="#fff"/>
+                                    </IconButton>) : (<IconButton
+                                        onClick={() => {
+                                            setFilter(prevState => ({
+                                                ...prevState, hotentg: '', idtg: 'DESC'
+                                            }))
+                                        }}
+                                    >
+                                        <Icon icon="akar-icons:arrow-up" color="#fff"/>
+                                    </IconButton>)}
+
+                                </TableCell>
+                                <TableCell align="center" style={{color: '#fff'}}>
+                                    ID sách
+                                    {filter.idkm === 'DESC' ? (<IconButton onClick={() => {
+                                        setFilter(prevState => ({
+                                            ...prevState, hotentg: '', idtg: 'ASC'
+                                        }))
+                                    }}>
+                                        <Icon icon="akar-icons:arrow-down" color="#fff"/>
+                                    </IconButton>) : (<IconButton
+                                        onClick={() => {
+                                            setFilter(prevState => ({
+                                                ...prevState, hotentg: '', idtg: 'DESC'
+                                            }))
+                                        }}
+                                    >
+                                        <Icon icon="akar-icons:arrow-up" color="#fff"/>
+                                    </IconButton>)}
+
+                                </TableCell>
+                                <TableCell align="center" style={{color: '#fff'}}>
+                                   Tên sách
+                                </TableCell>
+                                <TableCell align="center" style={{color: '#fff'}}>
+                                    Phần trăm KM
+                                </TableCell>
+                                <TableCell align="center" style={{color: '#fff'}}>
+                                   Ngày bắt đầu
+                                </TableCell>
+                                <TableCell align="center" style={{color: '#fff'}}>
+                                    Ngày kết thúc
+                                </TableCell>
+                                <TableCell align="center" style={{color: '#fff'}}>
+                                    Hành động
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        {/*table body*/}
+                        <TableBody>
+                            {filterData?.map(e => (
+                                <TableRow key={e.idkm}>
+                                <TableCell align="center">{e.idkm} </TableCell>
+                                <TableCell align="center">{e.idsach}</TableCell>
+                                <TableCell>{e.tensach}</TableCell>
+                                <TableCell align="center">{e.phan_tram+'%'}</TableCell>
+                                    <TableCell align="center">
+                                        {formatDateTime(e.ngay_bd_km)}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {formatDateTime(e.ngay_het_km)}
+                                    </TableCell>
+                                <TableCell align="center">
+                                    <Button
+                                        startIcon={<Icon icon="fluent:delete-24-filled" color="#ff4444"/>}
+                                        size="small"
+                                        style={{textTransform: 'none'}}
+                                        onClick={() => {
+                                            handleClickOpenDelete();
+                                            setIdkm(e.idkm);
+                                        }}
+                                    >
+                                        Xóa
+                                    </Button>
+
+                                    <Button
+                                        startIcon={<Icon icon="eva:edit-2-fill" color="#33b5e5"/>}
+                                        size="small"
+                                        onClick={() => {
+                                            const datebd = new Date(e.ngay_bd_km);
+                                            const datekt = new Date(e.ngay_het_km);
+                                            datebd.setHours(datebd.getHours()+7);
+                                            datekt.setHours(datekt.getHours()+7);
+                                            sach.push({
+                                                idsach: e.idsach,
+                                                tensach: e.tensach
+                                            })
+                                            setIdkm(e.idkm)
+                                            setDataFormEdit({
+                                                idsach: e.idsach,
+                                                ngay_bd_km: datebd.toISOString().slice(0, 16),
+                                                ngay_het_km: datekt.toISOString().slice(0, 16),
+                                                phan_tram: e.phan_tram
+                                            })
+                                            handleClickOpenEdit();
+                                        }}
+                                    >
+                                        Sửa
+                                    </Button>
+
+                                </TableCell>
+                            </TableRow>))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </Box>
 
 

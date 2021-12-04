@@ -13,9 +13,9 @@ const HoaDonAPI = {
         const url = `/api/huydon/${idhd}`;
         return axiosClient.put(url);
     },
-    getAll(){
+    getAll(f){
         const url = '/api/hoadon/getall';
-        return axiosClient.get(url);
+        return axiosClient.get(url, {params: f});
     },
     xacnhan(idhd){
         const url = `/api/xacnhan/${idhd}`;

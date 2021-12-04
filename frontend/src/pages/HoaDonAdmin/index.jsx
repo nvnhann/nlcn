@@ -7,20 +7,19 @@ import {
     Dialog, DialogActions,
     DialogContent,
     DialogTitle, Divider, Grid,
-    IconButton,
-    Slide,
+    IconButton, List, ListItem, ListItemIcon, ListItemText,
+    Slide, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     TextField,
     Typography
 } from "@material-ui/core";
 import {Icon} from "@iconify/react";
-import {escapeRegExp} from "../../ultils/escapRegExp";
 import HoaDonAPI from "../../API/HoaDonAPI";
 import {formatDateTime} from "../../ultils/formatDateTime";
-import {DataGrid} from "@mui/x-data-grid";
 import {fCurrency} from "../../ultils/fCurrentcy";
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 import {useSnackbar} from "notistack";
+import {Pagination} from "@material-ui/lab";
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -30,28 +29,32 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 function HoaDonAdmin() {
     const [openX, setOpenX] = useState(false);
     const [openH, setOpenH] = useState(false);
-    const [searchText, setSearchText] = useState('');
     const [data, setData] = useState({});
     const [filterData, setFilterData] = useState(data);
     const [open, setOpen] = useState(false);
     const [idhd, setIdhd] = useState('');
     const [ref, setRef] = useState(0);
     const {enqueueSnackbar} = useSnackbar();
+    const [filter, setFilter] = useState({
+        tong_gia: '',
+        thoi_gian: '',
+        search: ''
+    });
+    const [page, setPage] = React.useState(1);
 
-    const requestSearch = (searchValue) => {
-        if (searchValue === '') {
-            setSearchText(searchValue);
-            return setFilterData(data);
-        }
-        setSearchText(searchValue);
-        const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
-        const filteredRows = data.filter((row) => {
-            return Object.keys(row).some((field) => {
-                return searchRegex.test(row[field].toString());
-            });
-        });
-        return setFilterData(filteredRows);
+    const handlePage = (event, value) => {
+        setPage(value);
     };
+
+    useEffect(() => {
+        (async () => {
+            const f = filter;
+            f.page = page;
+            const res = await HoaDonAPI.getAll(f);
+            setData(res);
+            setFilterData(res);
+        })();
+    }, [ref, filter]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -80,14 +83,6 @@ function HoaDonAdmin() {
         setOpenX(false);
     };
 
-    useEffect(() => {
-        (async () => {
-            const res = await HoaDonAPI.getAll();
-            setData(res);
-            setFilterData(res);
-        })();
-    }, [ref]);
-
 
     const XacNhan = async () => {
         try {
@@ -113,180 +108,15 @@ function HoaDonAdmin() {
         }
     }
 
-    const columns = [
-        {
-            field: 'action',
-            headerName: 'Hành động',
-            width: 250,
-            renderCell: (params) => (
-                <>
-                    {(params.row.trang_thai === 0) && (
-                        <>
-                        <strong>
-                            <Button
-                                variant="contained"
-                                onClick={()=>{
-                                    handleClickOpenH();
-                                    setIdhd(params.row.id);
-                                }}
-                                color="primary"
-                                style={{textTransform: 'none', marginRight: '1rem'}}
-                                size="small"
-                            >
-                                Xác nhận
-                            </Button>
-                        </strong>
-
-                        <strong>
-                        <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={()=>{
-                        handleClickOpenX();
-                        setIdhd(params.row.id);
-                    }}
-                        style={{textTransform: 'none', marginRight: '1rem'}}
-                        size="small"
-                        >
-                        Hủy
-                        </Button>
-                        </strong>
-                        <strong>
-                        <IconButton onClick={()=>{
-                        handleClickOpen()
-                        setIdhd(params.row.id);
-                    }}> <Icon icon="ei:eye"/></IconButton>
-                        </strong>
-                        </>
-                    )}
-
-                    {(params.row.trang_thai === 2) && (
-                        <>
-                            <Button
-                                disabled
-                                style={{textTransform: 'none', color: '#b26500'}}
-                            >
-                                Đã xác nhận
-                            </Button>
-                            <IconButton onClick={()=>{
-                                handleClickOpen()
-                                setIdhd(params.row.id);
-                            }}> <Icon icon="ei:eye"/></IconButton>
-                        </>
-
-                    )}
-
-                    {(params.row.trang_thai === 4) && (
-                        <>
-                            <Button
-                                disabled
-                                style={{textTransform: 'none', color: '#ab003c'}}
-                            >
-                                Đã hủy
-                            </Button>
-                        </>
-
-                    )}
-
-                    {(params.row.trang_thai === 3) && (
-                        <>
-                            <Button
-                                style={{textTransform: 'none'}}
-                                variant="contained"
-                                color="secondary"
-                                onClick={()=>{
-                                    handleClickOpenX()
-                                    setIdhd(params.row.id);
-                                }}
-                            >
-                                Yêu cầu hủy
-                            </Button>
-                            <IconButton onClick={()=>{
-                                handleClickOpen()
-                                setIdhd(params.row.id);
-                            }}> <Icon icon="ei:eye"/></IconButton>
-                        </>
-
-                    )}
-                </>
-            ),
-        },
-        {
-            field: 'id',
-            headerName: 'ID hóa đơn',
-            width: 200,
-        },
-        {
-            field: 'idtk',
-            headerName: 'ID user',
-            width: 200,
-        },
-        {
-            field: 'sach',
-            headerName: 'Sách',
-            width: 500,
-        },
-        {
-            field: 'ttgh',
-            headerName: 'Thông tin giao hàng',
-            width: 500,
-        },
-        {
-            field: 'tong_gia',
-            headerName: 'Tổng đơn',
-            width: 200,
-        },
-        {
-            field: 'email_paypal',
-            headerName: 'Email Paypal',
-            width: 300,
-        },
-        {
-            field: 'thoi_gian',
-            headerName: 'Thời gian',
-            width: 300,
-        },
-        {
-            field: 'trang_thai',
-            hide: true
-        }
-    ];
-
-    const rows = [];
-
-    const ttensach = (a,e)=>{
-        let tensach = '';
-        a.forEach((ev) => {
-            if(ev.idhd === e.idhd) {
-                tensach+=ev.tensach;
-            }
-        })
-        return tensach
-    }
-    filterData?.hd?.forEach((e) => {
-        rows.push({
-            id: e.idhd,
-            idtk: e.idtk,
-            sach: ttensach(filterData.cthd,e)
-            ,
-            ttgh: e.ho + ' ' + e.ten + ' - ' + e.sdt + ' - ' + e.diachi,
-            email_paypal: e.email_paypal,
-            tong_gia: fCurrency(e.tong_gia),
-            thoi_gian: formatDateTime(e.thoi_gian),
-            trang_thai: e.trang_thai,
-            action: e.idhd,
-        });
-    });
 
     return (
         <Page title="Hóa đơn">
-            <Typography color="primary" variant="h4" gutterBottom>
-                Hóa đơn
-            </Typography>
             <Box my={2}>
                 <TextField
-                    value={searchText}
-                    onChange={(e) => requestSearch(e.target.value)}
+                    value={filter.search}
+                    onChange={(e) => setFilter(prevState => ({
+                        ...prevState, search: e.target.value
+                    }))}
                     style={{width: '40ch'}}
                     variant="standard"
                     placeholder="Tìm kiếm ..."
@@ -301,8 +131,10 @@ function HoaDonAdmin() {
                                 title="Clear"
                                 aria-label="Clear"
                                 size="small"
-                                style={{visibility: searchText ? 'visible' : 'hidden'}}
-                                onClick={() => requestSearch('')}
+                                style={{visibility: filter.search ? 'visible' : 'hidden'}}
+                                onClick={() => setFilter(prevState => ({
+                                    ...prevState, search: ''
+                                }))}
                             >
                                 <Icon icon="ic:outline-clear" color="#6b7280"/>
                             </IconButton>
@@ -311,11 +143,185 @@ function HoaDonAdmin() {
                 />
             </Box>
             <Box>
-                <div style={{height: 390, width: '100%'}}>
-                    <div style={{height: 390, width: '100%'}}>
-                        <DataGrid rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]}/>
-                    </div>
-                </div>
+                <TableContainer style={{height: '37rem'}}>
+                    <Table>
+                        <TableHead style={{backgroundColor: '#6b7280'}}>
+                            <TableRow>
+                                <TableCell align="center" style={{color: '#fff'}}>
+                                    ID Hoá đơn
+                                </TableCell>
+                                <TableCell align="center" style={{color: '#fff'}}>
+                                    Họ và tên
+                                </TableCell>
+                                <TableCell align="center" style={{color: '#fff'}}>Email Paypal</TableCell>
+                                <TableCell align="center" style={{color: '#fff'}}>Sách</TableCell>
+                                <TableCell align="center" style={{color: '#fff',width: '10rem'}}>
+                                    Tổng giá
+                                    {filter.tong_gia === 'DESC' ? (<IconButton onClick={() => {
+                                        setFilter(prevState => ({
+                                            ...prevState, thoi_gian: '', tong_gia: 'ASC'
+                                        }))
+                                    }}>
+                                        <Icon icon="akar-icons:arrow-down" color="#fff"/>
+                                    </IconButton>) : (<IconButton
+                                        onClick={() => {
+                                            setFilter(prevState => ({
+                                                ...prevState, thoi_gian: '', tong_gia: 'DESC'
+                                            }))
+                                        }}
+                                    >
+                                        <Icon icon="akar-icons:arrow-up" color="#fff"/>
+                                    </IconButton>)}
+                                </TableCell>
+                                <TableCell align="center" style={{color: '#fff'}}>Thời gian
+                                    {filter.thoi_gian === 'DESC' ? (<IconButton onClick={() => {
+                                        setFilter(prevState => ({
+                                            ...prevState, tong_gia: '', thoi_gian: 'ASC'
+                                        }))
+                                    }}>
+                                        <Icon icon="akar-icons:arrow-down" color="#fff"/>
+                                    </IconButton>) : (<IconButton
+                                        onClick={() => {
+                                            setFilter(prevState => ({
+                                                ...prevState, tong_gia: '', thoi_gian: 'DESC'
+                                            }))
+                                        }}
+                                    >
+                                        <Icon icon="akar-icons:arrow-up" color="#fff"/>
+                                    </IconButton>)}
+                                </TableCell>
+                                <TableCell align="center" style={{color: '#fff', width: '15rem'}}>
+                                    Hành động
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        {/*table body*/}
+                        <TableBody>
+                            {filterData?.hd?.map(e => (<TableRow key={e.idtg}>
+                                <TableCell align="center">{e.idhd}</TableCell>
+                                <TableCell align="center">{e.hoten}</TableCell>
+                                <TableCell align="center">{e.email_paypal}</TableCell>
+                                <TableCell>
+                                    <List >
+                                    {filterData?.cthd?.map((ev,i)=>(
+                                        (ev.idhd === e.idhd) && (
+                                            <ListItem key={i}>
+                                                <ListItemIcon>
+                                                    <Icon icon="emojione-monotone:green-book" />
+                                                </ListItemIcon>
+                                                <ListItemText primary={ev.tensach} />
+                                            </ListItem>
+                                        )
+                                    ))}
+                                    </List>
+                                </TableCell>
+                                <TableCell align="center">{'$'+e.tong_gia}</TableCell>
+                                <TableCell align="center">{formatDateTime(e.thoi_gian)}</TableCell>
+
+                                <TableCell align="center">
+                                        {(e.trang_thai === 0) && (
+                                            <>
+                                                    <Button
+                                                        variant="contained"
+                                                        onClick={()=>{
+                                                            handleClickOpenH();
+                                                            setIdhd(e.idhd);
+                                                        }}
+                                                        color="primary"
+                                                        style={{textTransform: 'none', marginRight: '1rem'}}
+                                                        size="small"
+                                                    >
+                                                        Xác nhận
+                                                    </Button>
+                                                    <Button
+                                                        variant="contained"
+                                                        color="secondary"
+                                                        onClick={()=>{
+                                                            handleClickOpenX();
+                                                            setIdhd(e.idhd);
+                                                        }}
+                                                        style={{textTransform: 'none', marginRight: '1rem'}}
+                                                        size="small"
+                                                    >
+                                                        Hủy
+                                                    </Button>
+                                                    <IconButton onClick={()=>{
+                                                        handleClickOpen()
+                                                        setIdhd(e.idhd);
+                                                    }}> <Icon icon="ei:eye"/></IconButton>
+                                            </>
+                                        )}
+                                        {(e.trang_thai === 2) && (
+                                            <>
+                                                <Button
+                                                    disabled
+                                                    style={{textTransform: 'none', color: '#b26500'}}
+                                                >
+                                                    Đã xác nhận
+                                                </Button>
+                                                <IconButton onClick={()=>{
+                                                    handleClickOpen()
+                                                    setIdhd(e.idhd);
+                                                }}> <Icon icon="ei:eye"/></IconButton>
+                                            </>
+
+                                        )}
+
+                                        {(e.trang_thai === 4) && (
+                                            <>
+                                                <Button
+                                                    disabled
+                                                    style={{textTransform: 'none', color: '#ab003c'}}
+                                                >
+                                                    Đã hủy
+                                                </Button>
+                                            </>
+
+                                        )}
+
+                                        {(e.trang_thai === 3) && (
+                                            <>
+                                                <Button
+                                                    style={{textTransform: 'none'}}
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    onClick={()=>{
+                                                        handleClickOpenX()
+                                                        setIdhd(e.idhd);
+                                                    }}
+                                                >
+                                                    Yêu cầu hủy
+                                                </Button>
+                                                <IconButton onClick={()=>{
+                                                    handleClickOpen()
+                                                    setIdhd(e.idhd);
+                                                }}> <Icon icon="ei:eye"/></IconButton>
+                                            </>
+
+                                        )}
+                                </TableCell>
+                            </TableRow>))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <Grid container style={{margin: '1rem 0', position: "relative"}}>
+                    <Grid item xs={9}>
+                        <Pagination size="small" count={Math.ceil(filterData?.hd ? filterData.hd[0]?.so_luong / 10 : 1)} color="primary"
+                                    page={page} onChange={handlePage}/>
+
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Button
+                            // onClick={ExportExcel}
+                            variant="contained"
+                            style={{position: 'absolute', textTransform: 'none', right: 0}}
+                            color="primary"
+                            startIcon={<Icon icon="entypo:download" color="#ffffff"/>}
+                        >
+                            Tải về
+                        </Button>
+                    </Grid>
+                </Grid>
             </Box>
             <Dialog
                 fullWidth
@@ -367,7 +373,7 @@ function HoaDonAdmin() {
                                             </Typography>
 
                                             <Typography component="span">
-                                                {e.ho + ' ' + e.ten}
+                                                {e.hoten}
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={6}>

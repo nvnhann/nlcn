@@ -24,6 +24,7 @@ NhaXuatBan.getAll = (q, rs) => {
 
     const start = (q.page - 1) * 8;
     const end = q.page * 8;
+    const idnxb = q.idnxb || '';
     let qr = "";
     if (q.search) {
         qr = "SELECT nha_xuat_ban.*, (SELECT COUNT(idnxb) FROM `nha_xuat_ban` WHERE idnxb LIKE '%" + q.search + "%' OR tennxb LIKE '%" + q.search + "%' ) as so_luong FROM `nha_xuat_ban` WHERE idnxb LIKE '%" + q.search + "%' OR tennxb LIKE '%" + q.search + "%'"
@@ -32,10 +33,12 @@ NhaXuatBan.getAll = (q, rs) => {
     if (q.tennxb) {
         qr += "ORDER BY tennxb " + q.tennxb;
     } else {
-        qr += "ORDER BY SUBSTRING(idnxb,5) * 1 " + q.idnxb;
+        qr += "ORDER BY SUBSTRING(idnxb,5) * 1 " + idnxb;
     }
 
-    qr += " LIMIT " + start + "," + end + "";
+    if(q.page){
+        qr += " LIMIT " + start + "," + end + "";
+    }
     console.log(qr)
     sql.query(qr, (err, data) => {
         if (err) {

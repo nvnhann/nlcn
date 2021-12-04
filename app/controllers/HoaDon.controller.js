@@ -7,7 +7,6 @@ exports.create = (req, res)=>{
         tong_gia: req.body.tong_gia,
         idtk: req.body.idtk,
         iddc: req.body.iddc,
-        thoi_gian: req.body.ThoiGian,
         trang_thai: 0
     });
 
@@ -76,7 +75,7 @@ exports.getById = (req, res) =>{
 }
 
 exports.getAll = (req, res) =>{
-    HoaDon.getAll((err, hd)=>{
+    HoaDon.getAll(req.query,(err, hd)=>{
         if(err) {
             console.log(err);
             return res.status(500).send({

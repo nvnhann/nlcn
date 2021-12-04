@@ -69,9 +69,6 @@ export default function User() {
     return (
         <Page title="User">
             <Box style={{width: '70rem', margin: '0 auto'}}>
-                <Typography color="primary" variant="h4" gutterBottom>
-                    User
-                </Typography>
                 <TextField
                     value={filter.search}
                     onChange={(e) => setFilter(prevState => ({

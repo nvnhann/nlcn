@@ -1,9 +1,9 @@
 import axiosClient from './axiosClient';
 
 const SachApi = {
-  get() {
+  get(f) {
     const url = '/api/sach';
-    return axiosClient.get(url);
+    return axiosClient.get(url, {params:f});
   },
   getSachKm(){
     const url = '/api/sachkm';
@@ -29,6 +29,10 @@ const SachApi = {
     const url = `/api/sach/${id}`;
     return axiosClient.put(url, data);
   },
+  getExcel() {
+    const url = '/api/sachxlsx';
+    return axiosClient.get(url);
+  }
 };
 
 export default SachApi;

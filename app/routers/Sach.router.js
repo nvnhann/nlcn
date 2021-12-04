@@ -44,4 +44,5 @@ module.exports = function (app) {
     [authjwt.verifyToken, authjwt.isAdmin],
     Sach.delete
   );
+  app.get('/api/sachxlsx', [authjwt.verifyToken, authjwt.isAdmin], Sach.getExcel);
 };
