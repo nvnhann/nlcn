@@ -125,6 +125,7 @@ function ProductDetail() {
     }
 
 
+
     return (
         <Page title={sach.tensach}>
             <Box>
@@ -193,7 +194,7 @@ function ProductDetail() {
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={12}>
-                                            <Rating name="read-only" value={5} readOnly/>
+                                            <Rating name="read-only" value={Number.parseFloat(sach?.danhgia)} precision={0.1} readOnly/>
                                         </Grid>
                                         <Grid item xs={12}>
                                             <Typography component="span" variant="h5" color="secondary">

@@ -85,13 +85,13 @@ function ShopCart() {
 
     return (
         <Page title="Giỏ hàng">
-            <Paper style={{maxWidth: 1000, margin: '0 auto', paddingBottom: '5rem'}}>
+            <Paper style={{maxWidth: 1200, margin: '0 auto', paddingBottom: '5rem'}}>
                 <TableContainer>
                     <Table>
                         <TableHead style={{backgroundColor: '#6b7280'}}>
                             <TableRow>
                                 {cell.map((e, index) => (
-                                    <TableCell style={{color: '#fff'}} key={index}>
+                                    <TableCell align="center" style={{color: '#fff'}} key={index}>
                                         {e.name}
                                     </TableCell>
                                 ))}
@@ -109,7 +109,7 @@ function ShopCart() {
                                         />
                                     </TableCell>
                                     <TableCell>$ {e.gia_sach}</TableCell>
-                                    <TableCell>
+                                    <TableCell style={{width: '10rem'}}>
                                         <IconButton
                                             color="primary"
                                             onClick={() => {

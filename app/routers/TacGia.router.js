@@ -8,7 +8,7 @@ module.exports = function (app) {
     next();
   });
   app.post('/api/tacgia', [authjwt.verifyToken, authjwt.isAdmin], tacgia.create);
-  app.get('/api/tacgia', [authjwt.verifyToken, authjwt.isAdmin], tacgia.getAll);
+  app.get('/api/tacgia', tacgia.getAll);
   app.get('/api/tgxlsx', [authjwt.verifyToken, authjwt.isAdmin], tacgia.getExcel);
   app.delete('/api/tacgia/:idtg', [authjwt.verifyToken, authjwt.isAdmin], tacgia.delete);
   app.put('/api/tacgia/:idtg', [authjwt.verifyToken, authjwt.isAdmin], tacgia.update);

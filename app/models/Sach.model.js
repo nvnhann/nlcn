@@ -53,7 +53,7 @@ Sach.create = (newSach, rs) => {
 
 Sach.getAll = (rs) => {
     sql.query(
-        "SELECT * FROM `sach` s, tac_gia t, ngon_ngu n, nha_xuat_ban nxb, nha_cung_cap ncc, sach_kich_thuoc kt, the_loai tl WHERE s.idtg = t.idtg AND s.idnn = n.idnn AND s.idnxb = nxb.idnxb AND kt.idkt = s.idkt AND ncc.idncc = s.idncc and s.idtl = tl.idtl",
+        "SELECT *, avg_rate(s.idsach) as danhgia  FROM `sach` s, tac_gia t, ngon_ngu n, nha_xuat_ban nxb, nha_cung_cap ncc, sach_kich_thuoc kt, the_loai tl WHERE s.idtg = t.idtg AND s.idnn = n.idnn AND s.idnxb = nxb.idnxb AND kt.idkt = s.idkt AND ncc.idncc = s.idncc and s.idtl = tl.idtl",
         (err, data) => {
             if (err) return rs(err, null);
             rs(null, data);
@@ -70,7 +70,7 @@ Sach.getSachkm = (rs) => {
 
 Sach.getById = (idsach, rs) => {
     sql.query(
-        "SELECT khuyen_mai.phan_tram, s.*, t.hotentg, n.ngon_ngu, kt.kt_ngang, kt.kt_doc , nxb.tennxb, ncc.tenncc, tl.tentl FROM `sach` s LEFT JOIN khuyen_mai on s.idsach = khuyen_mai.idsach, tac_gia t, ngon_ngu n, nha_xuat_ban nxb, nha_cung_cap ncc, sach_kich_thuoc kt, the_loai tl WHERE s.idtg = t.idtg AND s.idnn = n.idnn AND s.idnxb = nxb.idnxb AND kt.idkt = s.idkt AND ncc.idncc = s.idncc and s.idtl = tl.idtl AND s.idsach = ?",
+        "SELECT avg_rate(s.idsach) as danhgia,khuyen_mai.phan_tram, s.*, t.hotentg, n.ngon_ngu, kt.kt_ngang, kt.kt_doc , nxb.tennxb, ncc.tenncc, tl.tentl FROM `sach` s LEFT JOIN khuyen_mai on s.idsach = khuyen_mai.idsach, tac_gia t, ngon_ngu n, nha_xuat_ban nxb, nha_cung_cap ncc, sach_kich_thuoc kt, the_loai tl WHERE s.idtg = t.idtg AND s.idnn = n.idnn AND s.idnxb = nxb.idnxb AND kt.idkt = s.idkt AND ncc.idncc = s.idncc and s.idtl = tl.idtl AND s.idsach = ?",
         idsach,
         (err, data) => {
             if (err) return rs(err, null);
@@ -86,15 +86,19 @@ Sach.get = (q, rs) => {
     let qr = "";
     const idsach = q.idsach || '';
     if(q.search)
-        qr = "SELECT sach.idsach, sach.tensach, gia_sach, hinhanh, phan_tram,so_luong ,(SELECT COUNT(idsach) FROM sach, nha_cung_cap ncc, tac_gia tg, nha_xuat_ban nxb WHERE sach.idtg = tg.idtg and sach.idnxb = nxb.idnxb and sach.idncc = ncc.idncc and (sach.idsach  LIKE '%" + q.search + "%' OR tensach  LIKE '%" + q.search + "%' or gia_sach  LIKE '%" + q.search + "%' or so_luong  LIKE '%" + q.search + "%'  or phan_tram  LIKE '%" + q.search + "%' or tg.hotentg LIKE '%" + q.search + "%' or ncc.tenncc LIKE '%" + q.search + "%' or nxb.tennxb LIKE '%" + q.search + "%'  )) AS so_luong_trang " +
+        qr = "SELECT avg_rate(sach.idsach) as danhgia, sach.idsach, sach.tensach, gia_sach, hinhanh, phan_tram,so_luong ,(SELECT COUNT(idsach) FROM sach, nha_cung_cap ncc, tac_gia tg, nha_xuat_ban nxb WHERE sach.idtg = tg.idtg and sach.idnxb = nxb.idnxb and sach.idncc = ncc.idncc and (sach.idsach  LIKE '%" + q.search + "%' OR tensach  LIKE '%" + q.search + "%' or gia_sach  LIKE '%" + q.search + "%' or so_luong  LIKE '%" + q.search + "%'  or phan_tram  LIKE '%" + q.search + "%' or tg.hotentg LIKE '%" + q.search + "%' or ncc.tenncc LIKE '%" + q.search + "%' or nxb.tennxb LIKE '%" + q.search + "%'  )) AS so_luong_trang " +
             "FROM `sach` left JOIN khuyen_mai ON sach.idsach = khuyen_mai.idsach, tac_gia tg, nha_xuat_ban nxb, nha_cung_cap ncc " +
             " WHERE sach.idtg = tg.idtg and sach.idnxb = nxb.idnxb and sach.idncc = ncc.idncc and ( sach.idsach  LIKE '%" + q.search + "%' OR tensach  LIKE '%" + q.search + "%' or gia_sach  LIKE '%" + q.search + "%' or so_luong  LIKE '%" + q.search + "%'  or phan_tram  LIKE '%" + q.search + "%'  or tg.hotentg LIKE '%" + q.search + "%' or ncc.tenncc LIKE '%" + q.search + "%' or nxb.tennxb LIKE '%" + q.search + "%') ";
-    else qr = "SELECT sach.idsach, sach.tensach, gia_sach, hinhanh, phan_tram,so_luong ,(SELECT COUNT(idsach) FROM sach) AS so_luong_trang " +
-        "FROM `sach` left JOIN khuyen_mai ON sach.idsach = khuyen_mai.idsach ";
+    else qr = "SELECT avg_rate(sach.idsach) as danhgia, sach.idsach, sach.tensach, gia_sach, hinhanh, phan_tram,so_luong ,(SELECT COUNT(idsach) FROM sach) AS so_luong_trang " +
+        "FROM `sach` left JOIN khuyen_mai ON sach.idsach = khuyen_mai.idsach, tac_gia tg WHERE tg.idtg = sach.idtg ";
     if(q.tensach) qr += "ORDER BY tensach "+q.tensach;
     else if(q.gia) qr += "ORDER BY gia_sach "+q.gia;
     else if(q.so_luong) qr += "ORDER BY so_luong "+q.so_luong;
     else if(q.khuyen_mai) qr += "ORDER BY phan_tram "+q.khuyen_mai;
+    else if(q.sort === "moinhat") qr += "ORDER BY SUBSTRING(sach.idsach,6) * 1 DESC"
+    else if(q.sort === "gia_giam") qr += "ORDER BY gia_sach DESC "
+    else if(q.sort === "gia_tang") qr += "ORDER BY gia_sach ASC "
+    else if(q.sort === "khuyenmai") qr += "AND phan_tram IS NOT NULL ";
     else qr += "ORDER BY SUBSTRING(sach.idsach,6) * 1 "+ idsach;
    if(q.page){
        qr += " LIMIT " + start + "," + end + "";

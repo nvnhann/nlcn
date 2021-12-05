@@ -8,8 +8,7 @@ exports.create = (req, res) =>{
     }
 
     const profile = new Profile({
-        ho: req.body.lastname,
-        ten: req.body.firstname,
+        hoten: req.body.hoten,
         sdt: req.body.phone,
         idtk: req.idtk
     });
@@ -47,8 +46,7 @@ exports.updateEmail = (req, res)=>{
 
 exports.update= (req, res)=>{
     const profile = new Profile({
-        ho: req.body.lastname,
-        ten: req.body.firstname,
+       hoten: req.body.hoten,
         sdt: req.body.phone,
         idtk: req.idtk
     });

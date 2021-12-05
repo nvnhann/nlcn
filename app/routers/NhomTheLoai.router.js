@@ -6,7 +6,7 @@ module.exports = function (app) {
     next();
   });
   app.post('/api/nhomtheloai', [authjwt.verifyToken, authjwt.isAdmin], nhomtheloai.create);
-  app.get('/api/nhomtheloai', [authjwt.verifyToken, authjwt.isAdmin], nhomtheloai.getAll);
+  app.get('/api/nhomtheloai', nhomtheloai.getAll);
   app.delete('/api/nhomtheloai/:idntl', [authjwt.verifyToken, authjwt.isAdmin], nhomtheloai.delete);
   app.put('/api/nhomtheloai/:idntl', [authjwt.verifyToken, authjwt.isAdmin], nhomtheloai.update);
 };

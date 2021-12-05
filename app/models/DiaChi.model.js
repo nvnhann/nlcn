@@ -2,9 +2,8 @@ const sql = require('./db');
 const DiaChi = function (diachi) {
   this.diachi = diachi.diachi;
   this.mac_dinh = diachi.mac_dinh;
-  this.ho = diachi.ho;
   this.sdt= diachi.sdt;
-  this.ten= diachi.ten;
+  this.hoten= diachi.hoten;
   this.idtk = diachi.idtk;
 };
 

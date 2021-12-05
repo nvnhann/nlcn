@@ -13,7 +13,7 @@ const ProductImgStyle = styled('img')({
 });
 
 function ProductCard({product}) {
-    const {tensach, hinhanh, gia_sach, idsach, phan_tram} = product;
+    const {tensach, hinhanh, gia_sach, idsach, phan_tram, danhgia} = product;
 
     return (
         <Card
@@ -63,7 +63,7 @@ function ProductCard({product}) {
                 </Typography>
 
 
-                <Rating name="read-only" value={5} readOnly/>
+                <Rating name="read-only" value={Number.parseFloat(danhgia)} precision={0.1}/>
             </Box>
         </Card>
     );

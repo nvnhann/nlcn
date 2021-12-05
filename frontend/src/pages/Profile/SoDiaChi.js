@@ -72,8 +72,7 @@ function SoDiaChi() {
     };
     const form = useForm({
         defaultValues: {
-            ho: '',
-            ten: '',
+           hoten:'',
             diachi: '',
             macdinh: 0,
             sdt: ''
@@ -82,7 +81,6 @@ function SoDiaChi() {
 
     const formE = useForm({
         defaultValues: {
-            ho: '',
             ten: '',
             diachi: '',
             sdt: '',
@@ -152,13 +150,12 @@ function SoDiaChi() {
             </Typography>
             {!!diachi[0]?.mac_dinh && (<>
                 <Typography component="span" style={{margin: '1rem 0'}}>
-                    {diachi[0].ho + ' ' + diachi[0].ten + ' | ' + diachi[0].sdt + ' | ' + diachi[0].diachi}
+                    {diachi[0].hoten + ' | ' + diachi[0].sdt + ' | ' + diachi[0].diachi}
                 </Typography>
                 <IconButton onClick={() => {
                     handleClickOpenE();
                     formE.reset({
-                        ho: diachi[0].ho,
-                        ten: diachi[0].ten,
+                        hoten: diachi[0].hoten,
                         sdt: diachi[0].sdt,
                         diachi: diachi[0].diachi,
                         macdinh: 0
@@ -175,11 +172,11 @@ function SoDiaChi() {
                     return (
                         <div key={e.iddc}>
                             <Typography component="span" style={{margin: '1rem 0'}}>
-                                {e.ho + ' ' + e.ten + ' | ' + e.sdt + ' | ' + e.diachi}
+                                {e.hoten +' | ' + e.sdt + ' | ' + e.diachi}
                             </Typography>
                             <IconButton onClick={() => {
                                 handleClickOpenE();
-                                formE.reset({ho: e.ho, ten: e.ten, sdt: e.sdt, diachi: e.diachi, macdinh: 0});
+                                formE.reset({hoten: e.hoten, sdt: e.sdt, diachi: e.diachi, macdinh: 0});
                                 setIddc(e.iddc)
                                 setCheckedE(false);
                             }}><Icon icon="akar-icons:edit" color="#33b5e5"/>
@@ -215,10 +212,7 @@ function SoDiaChi() {
                         </IconButton>
                     </DialogTitle>
                     <DialogContent>
-                        <Grid container spacing={2}>
-                            <Grid item xs={6}><InputText form={form} name="ho" label="Họ"/></Grid>
-                            <Grid item xs={6}><InputText form={form} name="ten" label="Tên"/></Grid>
-                        </Grid>
+                        <InputText form={form} name="hoten" label="Họ và tên" fullWidth/>
                         <InputText form={form} name="sdt" label="số điện thoại" fullWidth/>
                         <InputText form={form} name="diachi" label="Địa chỉ" fullWidth/>
                         <FormControlLabel
@@ -272,10 +266,7 @@ function SoDiaChi() {
                         </IconButton>
                     </DialogTitle>
                     <DialogContent>
-                        <Grid container spacing={2}>
-                            <Grid item xs={6}><InputText form={formE} name="ho" label="Họ"/></Grid>
-                            <Grid item xs={6}><InputText form={formE} name="ten" label="Tên"/></Grid>
-                        </Grid>
+                        <InputText form={formE} name="hoten" label="Họ và tên" fullWidth/>
                         <InputText form={formE} name="sdt" label="số điện thoại" fullWidth/>
                         <InputText form={formE} name="diachi" label="Địa chỉ" fullWidth/>
                         <FormControlLabel

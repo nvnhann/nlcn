@@ -5,7 +5,6 @@ import {
     DialogContent,
     DialogTitle,
     Divider,
-    Grid,
     IconButton,
     Paper,
     Slide,
@@ -43,8 +42,7 @@ function Account() {
     };
     const form = useForm({
         defaultValues: {
-            firstname: profile.ten || '',
-            lastname: profile.ho || ' ',
+            hoten: '',
             phone: profile.sdt || ' ',
         },
     });
@@ -68,7 +66,7 @@ function Account() {
                     Họ và tên:
                 </Typography>
                 <Typography color="secondary" variant="h6" component="span">
-                    {profile.ho} {profile.ten}
+                    {profile.hoten}
                 </Typography>
             </div>
             <div style={{marginBottom: '1rem'}}>
@@ -91,8 +89,7 @@ function Account() {
                     onClick={() => {
                         handleClickOpen();
                         form.reset({
-                            firstname: profile.ten,
-                            lastname: profile.ho,
+                            hoten: profile.hoten,
                             phone: profile.sdt
                         })
                     }}>Cập nhật thông tin</Button>
@@ -144,11 +141,8 @@ function Account() {
                         </IconButton>
                     </DialogTitle>
                     <DialogContent>
-                        <Grid container spacing={2}>
-                            <Grid item xs={6}><InputText form={form} name="lastname" label="Họ"/></Grid>
-                            <Grid item xs={6}><InputText form={form} name="firstname" label="Tên"/></Grid>
-                        </Grid>
-                        <InputText form={form} name="phone" label="Số điện thoại"/>
+                        <InputText fullWidth form={form} name="hoten" label="Tên"/>
+                        <InputText fullWidth form={form} name="phone" label="Số điện thoại"/>
                     </DialogContent>
                     <DialogActions>
                         <Button

@@ -4,9 +4,8 @@ exports.create = (req, res) => {
   const diachi = new DiaChi({
     diachi: req.body.diachi,
     mac_dinh: req.body.macdinh,
-    ho: req.body.ho,
+    hoten: req.body.hoten,
     sdt: req.body.sdt,
-    ten: req.body.ten,
     idtk: req.idtk,
   });
   DiaChi.create(diachi, (err, _) => {
@@ -43,8 +42,7 @@ exports.update = (req, res) => {
   const iddc = req.params.iddc;
   const diachi = new DiaChi({
     diachi: req.body.diachi,
-    ho: req.body.ho,
-    ten: req.body.ten,
+    hoten: req.body.hoten,
     mac_dinh: req.body.macdinh,
     sdt: req.body.sdt,
     idtk: req.idtk
