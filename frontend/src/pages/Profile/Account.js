@@ -93,24 +93,24 @@ function Account() {
                             phone: profile.sdt
                         })
                     }}>Cập nhật thông tin</Button>
+            {/*<Divider style={{margin: '1rem 0'}}/>*/}
+            {/*<div style={{marginBottom: '1rem'}}>*/}
+            {/*    <Typography variant="h6" component="span" style={{marginRight: '1rem'}}>*/}
+            {/*        Đơn hàng thành công:*/}
+            {/*    </Typography>*/}
+            {/*    <Typography variant="h6" component="span" color="secondary">*/}
+            {/*        {profile.so_hd}*/}
+            {/*    </Typography>*/}
+            {/*</div>*/}
+            {/*<div style={{marginBottom: '1rem'}}>*/}
+            {/*    <Typography variant="h6" component="span" style={{marginRight: '1rem'}}>*/}
+            {/*        Số tiền đã thanh toán:*/}
+            {/*    </Typography>*/}
+            {/*    <Typography variant="h6" component="span" color="secondary">*/}
+            {/*        {fCurrency(profile.tong_gia)}*/}
+            {/*    </Typography>*/}
+            {/*</div>*/}
             <Divider style={{margin: '1rem 0'}}/>
-            <div style={{marginBottom: '1rem'}}>
-                <Typography variant="h6" component="span" style={{marginRight: '1rem'}}>
-                    Đơn hàng thành công:
-                </Typography>
-                <Typography variant="h6" component="span" color="secondary">
-                    {profile.so_hd}
-                </Typography>
-            </div>
-            <div style={{marginBottom: '1rem'}}>
-                <Typography variant="h6" component="span" style={{marginRight: '1rem'}}>
-                    Số tiền đã thanh toán:
-                </Typography>
-                <Typography variant="h6" component="span" color="secondary">
-                    {fCurrency(profile.tong_gia)}
-                </Typography>
-            </div>
-            <Divider style={{marginBottom: '1rem'}}/>
             <div style={{marginBottom: '1rem'}}>
                 <Typography variant="h6" component="span" style={{marginRight: '1rem'}}>
                     Địa chỉ giao hàng mặc định:

@@ -101,13 +101,27 @@ function Product() {
                                         backgroundColor: '#6b7280',
                                         color: '#fff',
                                         margin: '0 .5rem'
-                                    }}>
+                                    }}
+                                              onClick={() => {
+                                                  navigate({pathname: '/app?s=' + e.tenntl});
+                                                  handleCloseD();
+                                              }}
+                                    >
                                         <ListItemText primary={e.tenntl}/>
                                     </ListItem>
                                     <List component="div" disablePadding>
                                         {theloai?.map(ev => (
                                             (e.idntl === ev.idntl && (
-                                                <ListItem key={ev.idtl} button style={{marginLeft: '1rem'}}>
+                                                <ListItem
+                                                    key={ev.idtl}
+                                                    button
+                                                    style={{marginLeft: '1rem'}}
+                                                    onClick={() => {
+                                                        navigate({pathname: '/app?s=' + ev.tentl});
+                                                        handleCloseD();
+                                                    }}
+
+                                                >
                                                     <ListItemText primary={ev.tentl}/>
                                                 </ListItem>
                                             ))
@@ -121,8 +135,8 @@ function Product() {
                                 </ListItem>
                                 <List component="div" disablePadding>
                                     {tacgia?.map(ev => (
-                                            <ListItem onClick={()=>{
-                                                navigate({pathname: '/app?s='+ev.hotentg});
+                                            <ListItem onClick={() => {
+                                                navigate({pathname: '/app?s=' + ev.hotentg});
                                                 handleCloseD();
                                             }} button key={ev.idtg} style={{marginLeft: '1rem', width: '15rem'}}>
                                                 <ListItemText primary={ev.hotentg}/>

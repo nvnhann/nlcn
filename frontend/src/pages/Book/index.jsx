@@ -265,7 +265,7 @@ function Book() {
     const submitDelete = async () => {
         try {
             await SachAPI.delete(idsach);
-            enqueueSnackbar('Xóa tác giả ' + tensach + ' thành công', {
+            enqueueSnackbar('Xóa ' + tensach + ' thành công', {
                 variant: 'success',
                 autoHideDuration: 2000,
             });

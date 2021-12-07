@@ -386,7 +386,7 @@ function ProductDetail() {
                                 <div key={e.idbldg}>
                                     <Grid container style={{marginTop: '1rem'}}>
                                         <Grid item xs={2}>
-                                            <Typography variant="h6" color="primary">{`${e.ho||' '} ${e.ten || '' }`}</Typography>
+                                            <Typography variant="h6" color="primary">{`${e.hoten||' '}`}</Typography>
                                             <Typography color="primary">{formatDateTime(e.thoi_gian)}</Typography>
                                         </Grid>
                                         <Grid item xs={10}>
@@ -421,7 +421,7 @@ function ProductDetail() {
                         <Icon icon="majesticons:close" color="#6b7280"/>
                     </IconButton>
                 </DialogTitle>
-                <SimpleBar style={{maxHeight: 600}}>
+                <SimpleBar style={{maxHeight: 700}}>
                     <DialogContent>
                         <Checkout
                             diachi={diaChi}

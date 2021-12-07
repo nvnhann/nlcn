@@ -97,6 +97,8 @@ exports.getAll = (req, res) =>{
     })
 }
 
+
+
 exports.huydon = (req, res) =>{
     const idhd = req.params.idhd;
     HoaDon.huy(idhd, (err, _)=>{
@@ -133,5 +135,15 @@ exports.XacNhanHuy = (req, res) =>{
             } else return  res.status(500).send({message: 'cant not cancle order!!'});
         }
         else return res.send({message: 'conform cancle order successfully!!'})
+    })
+}
+
+exports.getThongKe = (req, res)=>{
+    HoaDon.getThongKe((err, data) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).send({ message: err });
+        }
+        res.send(data);
     })
 }

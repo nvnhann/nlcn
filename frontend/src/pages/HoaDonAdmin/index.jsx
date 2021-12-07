@@ -20,6 +20,7 @@ import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 import {useSnackbar} from "notistack";
 import {Pagination} from "@material-ui/lab";
+import XLSX from "xlsx";
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -106,6 +107,50 @@ function HoaDonAdmin() {
         } catch (error) {
             enqueueSnackbar(error.message, {variant: 'error', autoHideDuration: 2000});
         }
+    }
+
+    const listSach = (idhd) =>{
+        let str = "";
+        let j = 1;
+        for(let i=0; i< filterData.cthd.length; i++){
+            if(filterData.cthd[i].idhd === idhd) str += (j++) +") "  + filterData.cthd[i].tensach + "\n"
+        }
+        return str;
+    }
+
+    const slSach = (idhd) =>{
+        let str = "";
+        let j = 1;
+        for(let i=0; i< filterData.cthd.length; i++){
+            if(filterData.cthd[i].idhd === idhd) str +=(j++) +") " + filterData.cthd[i].so_luong + "\n"
+        }
+        return str;
+    }
+
+    const getExcel = ()=>{
+        const data = [];
+
+        filterData.hd.map(e=>(
+            data.push({
+                "ID hóa đơn": e.idhd,
+                "ID tài khoản": e.idtk,
+                "Họ và tên": e.hoten,
+                "Địa chỉ": e.diachi,
+                "Số điện thoại": e.sdt,
+                "Sách": listSach(e.idhd),
+                "Số lượng": slSach(idhd),
+                "Tổng giá": e.tong_gia,
+                "Thời gian": formatDateTime(e.thoi_gian),
+
+            })
+        ))
+        const workSheet = XLSX.utils.json_to_sheet(data);
+        const workBook = XLSX.utils.book_new();
+
+        XLSX.utils.book_append_sheet(workBook, workSheet, "hoadon");
+        XLSX.write(workBook, {bookType: "xlsx", type: "buffer"});
+        XLSX.write(workBook, {bookType: "xlsx", type: "binary"});
+        XLSX.writeFile(workBook, "hoadon.xlsx")
     }
 
 
@@ -312,7 +357,7 @@ function HoaDonAdmin() {
                     </Grid>
                     <Grid item xs={3}>
                         <Button
-                            // onClick={ExportExcel}
+                            onClick={getExcel}
                             variant="contained"
                             style={{position: 'absolute', textTransform: 'none', right: 0}}
                             color="primary"

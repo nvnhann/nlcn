@@ -20,13 +20,14 @@ import Sale from "../pages/Sale";
 import HoaDonAdmin from "../pages/HoaDonAdmin";
 import ChangePwd from "../pages/Profile/ChangePWD";
 import ForgetPwd from "../pages/ForgetPwd";
+import MainDashBoard from "../pages/MainDashBoard";
 export default function Router() {
   const isAdmin = useSelector((state) => state.user.current.role) === 'ADMIN';
   const isLogin = !!useSelector((state) => state.user.current.id);
   return useRoutes([
     {
       path: '/',
-      element: isAdmin ? <Navigate to="/dashboard" /> : <HomePage />,
+      element: isAdmin ? <Navigate to="/dashboard/main" /> : <HomePage />,
       children: [
         {
           path: '/app',
@@ -105,6 +106,10 @@ export default function Router() {
         {
           path: 'changepwd',
           element: <ChangePwd />
+        },
+        {
+          path: 'main',
+          element: <MainDashBoard />
         }
       ],
     },

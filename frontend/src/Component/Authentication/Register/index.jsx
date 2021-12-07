@@ -8,12 +8,12 @@ function Register({handleClose}) {
     const handleSubmit = async (values) => {
         try {
             await userAPI.signup(values);
-            enqueueSnackbar('Đăng ký thành công', {variant: 'success', autoHideDuration: 2000});
+            enqueueSnackbar('Đăng ký thành công', {variant: 'success', autoHideDuration: 4000});
             if(handleClose){
                 handleClose();
             }
         } catch (error) {
-            enqueueSnackbar(error.message, {variant: 'error', autoHideDuration: 2000})
+            enqueueSnackbar(error.message, {variant: 'error', autoHideDuration: 10000})
             console.log(error)
         }
     }

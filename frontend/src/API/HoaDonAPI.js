@@ -25,6 +25,10 @@ const HoaDonAPI = {
         const url = `/api/xacnhanhuy/${idhd}`;
         return axiosClient.put(url);
     },
+    thongke(){
+        const url = '/api/thongke';
+        return axiosClient.get(url);
+    }
 }
 
 export default  HoaDonAPI;

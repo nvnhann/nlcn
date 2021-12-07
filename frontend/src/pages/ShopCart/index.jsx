@@ -163,7 +163,16 @@ function ShopCart() {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={checkout}
+                        onClick={()=>{
+                            if (total < 1) {
+                                enqueueSnackbar('Giỏ hàng rỗng', {variant: 'error', autoHideDuration: 2000});
+                                return;
+                            }
+                            checkout();
+
+                        }
+
+                        }
                         style={{textTransform: 'none', width: '12rem', margin: '1rem'}}
                     >
                         Thanh toán

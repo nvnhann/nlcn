@@ -12,6 +12,7 @@ module.exports = function (app){
     app.post('/api/hoadon',[authjwt.verifyToken], hoadon.create);
     app.get('/api/hoadon', [authjwt.verifyToken], hoadon.getById);
     app.get('/api/hoadon/getall', [authjwt.verifyToken, authjwt.isAdmin], hoadon.getAll);
+    app.get('/api/thongke', [authjwt.verifyToken, authjwt.isAdmin], hoadon.getThongKe);
     app.put('/api/huydon/:idhd', [authjwt.verifyToken], hoadon.huydon);
     app.put('/api/xacnhan/:idhd', [authjwt.verifyToken], hoadon.XacNhan);
     app.put('/api/xacnhanhuy/:idhd', [authjwt.verifyToken], hoadon.XacNhanHuy);

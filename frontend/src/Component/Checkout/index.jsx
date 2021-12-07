@@ -108,8 +108,7 @@ function Checkout(props) {
 
     const form = useForm({
         defaultValues: {
-            ho: '',
-            ten: '',
+            hoten: '',
             diachi: '',
             macdinh: 0,
             sdt: ''
@@ -158,7 +157,7 @@ function Checkout(props) {
                         <FormControlLabel onClick={() => {
                             setShowForm(false)
                         }} key={e.iddc} value={e.iddc} control={<Radio/>}
-                                          label={e.ho + ' ' + e.ten + " | " + e.sdt + " | " + e.diachi}/>
+                                          label={e.hoten + " | " + e.sdt + " | " + e.diachi}/>
                     ))}
                     <FormControlLabel onClick={() => {
                         setShowForm(true)
@@ -169,8 +168,7 @@ function Checkout(props) {
                 <Box>
                     <form onSubmit={form.handleSubmit(handleSubmit)}>
                         <Grid container spacing={2}>
-                            <Grid item xs={4}><InputText form={form} name="ho" label="Họ"/></Grid>
-                            <Grid item xs={4}><InputText form={form} name="ten" label="Tên"/></Grid>
+                            <Grid item xs={4}><InputText form={form} name="hoten" label="Họ và tên"/></Grid>
                             <Grid item xs={4}><InputText form={form} name="sdt" label="số điện thoại"/></Grid>
                         </Grid>
 
