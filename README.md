@@ -1,2 +1,9 @@
 # nlcn-v1
-# nlcn-v2
+# Hướng dẫn cài đặt
+npm install
+
+cd frontend
+
+npm install
+
+npm run dev
